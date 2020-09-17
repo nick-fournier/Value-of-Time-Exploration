@@ -5,7 +5,8 @@ library(gridExtra)
 library(extrafont)
 
 #loading data
-load("dat_estimate.RData")
+load("dat_estimatevot.RData")
+load("dat_estimatemnlmodjt.RData")
 
 #name the font in system
 windowsFonts(Times=windowsFont("TT Times New Roman"))

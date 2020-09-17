@@ -570,9 +570,11 @@ hist(base_mnldt[, TRPDUR],breaks=100)
 
 #### Saving ####
 print("Saving MNL data table")
-save(base_mnldt, MTS, file = "dat_mnldt.RData")
+save(base_mnldt, MTS, file = "dat_mnldt.RData", compress = "bzip2", compression_level = 9)
 print("Saving skim data")
-save(check, skims, file = "dat_skimdat.RData")
+#save(check, skims, file = "dat_skimdat.RData", compress = "bzip2", compression_level = 9)
+save(skims, file = "dat_skimdat.RData", compress = "bzip2", compression_level = 9)
+save(check, file = "dat_skimcheck.RData", compress = "bzip2", compression_level = 9)
 
 #Cleanup
 rm(list=ls())
