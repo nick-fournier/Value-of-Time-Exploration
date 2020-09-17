@@ -447,18 +447,18 @@ votmoddt
 
 #### Savings ####
 #Cleanup
-# save(mnldt, votavg, votmoddt, votmodjt, votmodjtintercept, votmodlist, votmodlistjt, 
-#      mnlavgmod, mnlfullmod, mnlmodlist, mnlmodlistjt, varlabelvals,
-#      file = "dat_estimate.RData", compress = "bzip2", compression_level = 9)
+save(mnldt, votavg, votmoddt, votmodjt, votmodjtintercept, votmodlist, votmodlistjt,
+     mnlavgmod, mnlfullmod, mnlmodlist, mnlmodlistjt, varlabelvals,
+     file = "dat_estimate.RData")#, compress = "bzip2", compression_level = 9)
 
-#Joint model (large file)
-save(mnlmodlistjt,
-     file = "dat_estimatemnlmodjt.RData", compress = "gzip", compression_level = 9)
-
-#Models and VOT calculations
-save(mnldt, mnlavgmod, mnlfullmod, mnlmodlist,
-     votavg, votmoddt, votmodjt, votmodjtintercept, votmodlist, votmodlistjt, varlabelvals,
-     file = "dat_estimatevot.RData", compress = "gzip", compression_level = 9)
+# #Joint model (large file)
+# save(mnlmodlistjt,
+#      file = "dat_estimatemnlmodjt.RData", compress = "gzip", compression_level = 9)
+# 
+# #Models and VOT calculations
+# save(mnldt, mnlavgmod, mnlfullmod, mnlmodlist,
+#      votavg, votmoddt, votmodjt, votmodjtintercept, votmodlist, votmodlistjt, varlabelvals,
+#      file = "dat_estimatevot.RData", compress = "gzip", compression_level = 9)
 
 rm(list=ls())
 # rm(list=setdiff(ls(), c('mnldt','votmoddt','votmodjt','votmodlist','votmodlistjt','votmodjtint',
