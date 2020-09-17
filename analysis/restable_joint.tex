@@ -1,0 +1,648 @@
+\documentclass{article}\usepackage[utf8]{inputenc}
+\usepackage[letterpaper, margin=0.5in]{geometry}
+\usepackage{booktabs,longtable,pdflscape,float,tabularx}
+\begin{document} \begin{table}[H]\centering\caption{Categorical data from the Massachusetts Travel Survey} \begingroup\fontsize{9}{11}\selectfont
+
+\begin{tabular}{llllllll}
+\toprule
+\multicolumn{2}{c}{Mode} & \multicolumn{2}{c}{Income} & \multicolumn{2}{c}{Purpose} & \multicolumn{2}{c}{Gender} \\
+\cmidrule(l{3pt}r{3pt}){1-2} \cmidrule(l{3pt}r{3pt}){3-4} \cmidrule(l{3pt}r{3pt}){5-6} \cmidrule(l{3pt}r{3pt}){7-8}
+Bin & N & Bin & N & Bin & N & Bin & N\\
+\midrule
+Rail & 728 & < 25,000 & 1,838 & Other & 1,699 & Female & 7,800\\
+Drive & 9,086 & 25,000-49,999 & 1,813 & Recreation & 2,137 & Male & 6,359\\
+Bus & 1,844 & 50,000-74,999 & 2,222 & Shopping/errands & 4,079 &  & \\
+Subway & 2,429 & 75,000-99,999 & 2,150 & Work/school & 6,244 &  & \\
+Taxi & 72 & 100,000-149,999 & 2,860 &  &  &  & \\
+ &  & $\geq$ 150,000 & 3,276 &  &  &  & \\
+\bottomrule
+\end{tabular}
+\endgroup{} \end{table} \begin{table}[H]\centering\caption{Discrete bins of continuous data from the Massachusetts Travel Survey} \begingroup\fontsize{9}{11}\selectfont
+
+\begin{tabular}{lrllrlll}
+\toprule
+\multicolumn{3}{c}{Age (years)} & \multicolumn{3}{c}{Distance (miles)} & \multicolumn{2}{c}{Time-of-day} \\
+\cmidrule(l{3pt}r{3pt}){1-3} \cmidrule(l{3pt}r{3pt}){4-6} \cmidrule(l{3pt}r{3pt}){7-8}
+Bin & Median & N & Bin & Median & N & Bin & N\\
+\midrule
+16-20 & 17 & 368 & < 0.5 & 0.46 & 1,178 & AM (06:00-9:59) & 2,578\\
+20-29 & 25 & 1,186 & 0.5-1 & 0.83 & 2,447 & Midday (10:00-15:59) & 5,758\\
+30-39 & 35 & 2,069 & 1-2 & 1.56 & 3,603 & PM (16:00-18:59) & 3,800\\
+40-49 & 45 & 3,321 & 2-4 & 2.96 & 3,365 & Night (19:00-5:59) & 2,023\\
+50-59 & 54 & 4,069 & 4-8 & 5.73 & 2,645 &  & \\
+60-69 & 63 & 2,322 & 8-12 & 10.14 & 725 &  & \\
+$\geq$ 70 & 75 & 824 & $\geq$ 12 & 13.91 & 196 &  & \\
+\bottomrule
+\end{tabular}
+\endgroup{} \end{table} \begin{table}[H]\centering\setlength{\tabcolsep}{2pt}\caption{Multinomial model results} \begingroup\fontsize{8}{10}\selectfont
+
+\begin{tabular}{lllllllllllll}
+\toprule
+\multicolumn{1}{c}{\textbf{ }} & \multicolumn{3}{c}{\textbf{Taxi}} & \multicolumn{3}{c}{\textbf{Bus}} & \multicolumn{3}{c}{\textbf{Subway}} & \multicolumn{3}{c}{\textbf{Rail}} \\
+\cmidrule(l{3pt}r{3pt}){2-4} \cmidrule(l{3pt}r{3pt}){5-7} \cmidrule(l{3pt}r{3pt}){8-10} \cmidrule(l{3pt}r{3pt}){11-13}
+Variable & $\beta$ & SE & p-value & $\beta$ & SE & p-value & $\beta$ & SE & p-value & $\beta$ & SE & p-value\\
+\midrule
+Intercept & -1.33 & 0.88 & 1.3e-01 & -4.35 & 1.13 & 1.1e-04 *** & 13.03 & 2340.50 & 1.0e+00 & 5.86 & 0.81 & 5.2e-13 ***\\
+Age & -0.01 & 0.01 & 6.2e-01 & -0.03 & 0.00 & $<$ 2.2e-16 *** & -0.03 & 0.00 & $<$ 2.2e-16 *** & -0.02 & 0.01 & 4.2e-03 **\\
+Cost & -0.58 & 0.05 & $<$ 2.2e-16 *** & 6.21 & 0.75 & 2.2e-16 *** & -4.58 & 1170.25 & 1.0e+00 & 0.30 & 0.08 & 1.3e-04 ***\\
+Gender & -0.17 & 0.33 & 6.1e-01 & -0.04 & 0.09 & 6.6e-01 & 0.17 & 0.10 & 7.9e-02 & -0.21 & 0.18 & 2.5e-01\\
+Income - 25,000-49,999 & -2.14 & 0.59 & 2.7e-04 *** & -2.46 & 0.15 & $<$ 2.2e-16 *** & -0.78 & 0.19 & 4.4e-05 *** & -2.23 & 0.36 & 4.9e-10 ***\\
+Income - 50,000-74,999 & -2.13 & 0.53 & 6.1e-05 *** & -2.82 & 0.15 & $<$ 2.2e-16 *** & -0.74 & 0.19 & 7.1e-05 *** & -1.93 & 0.34 & 1.1e-08 ***\\
+Income - 75,000-99,999 & -3.46 & 0.74 & 2.8e-06 *** & -3.41 & 0.17 & $<$ 2.2e-16 *** & -0.85 & 0.19 & 7.9e-06 *** & -1.85 & 0.33 & 3.3e-08 ***\\
+Income - 100,000-149,999 & -2.53 & 0.53 & 1.7e-06 *** & -3.81 & 0.16 & $<$ 2.2e-16 *** & -1.39 & 0.18 & 2.6e-14 *** & -2.33 & 0.30 & 1.3e-14 ***\\
+Income - $\geq$ 150,000 & -1.98 & 0.44 & 7.5e-06 *** & -3.96 & 0.17 & $<$ 2.2e-16 *** & -1.55 & 0.18 & $<$ 2.2e-16 *** & -2.28 & 0.30 & 4.2e-14 ***\\
+Trip duration & 0.65 & 0.05 & $<$ 2.2e-16 *** & -0.16 & 0.00 & $<$ 2.2e-16 *** & -0.17 & 0.00 & $<$ 2.2e-16 *** & -0.25 & 0.01 & $<$ 2.2e-16 ***\\
+Trip purpose - Recreation & -0.19 & 0.63 & 7.7e-01 & 2.14 & 0.25 & $<$ 2.2e-16 *** & 2.14 & 0.32 & 2.8e-11 *** & 1.93 & 0.71 & 6.7e-03 **\\
+Trip purpose - Shopping/errands & 0.13 & 0.57 & 8.2e-01 & 2.05 & 0.23 & $<$ 2.2e-16 *** & 1.74 & 0.32 & 4.5e-08 *** & 1.73 & 0.69 & 1.3e-02 *\\
+Trip purpose - Work/school & 0.76 & 0.56 & 1.7e-01 & 3.92 & 0.23 & $<$ 2.2e-16 *** & 3.72 & 0.30 & $<$ 2.2e-16 *** & 3.76 & 0.66 & 1.5e-08 ***\\
+Time of day - Midday & 0.03 & 0.50 & 9.6e-01 & -1.11 & 0.13 & $<$ 2.2e-16 *** & -0.88 & 0.15 & 1.1e-08 *** & -1.28 & 0.28 & 4.6e-06 ***\\
+Time of day - Night & 1.27 & 0.53 & 1.6e-02 * & 0.57 & 0.20 & 3.9e-03 ** & -0.63 & 0.17 & 2.4e-04 *** & -0.22 & 0.31 & 4.8e-01\\
+Time of day - PM & -1.92 & 0.70 & 6.2e-03 ** & -0.63 & 0.14 & 3.7e-06 *** & -0.54 & 0.14 & 1.5e-04 *** & 0.04 & 0.25 & 8.7e-01\\
+\bottomrule
+\multicolumn{13}{l}{McFadden $R^2=0.75$}\\
+\multicolumn{13}{l}{\textsuperscript{*} Significance level codes: '***' 99.99\%, '**' 99\%, '*' 95\%}\\
+\end{tabular}
+\endgroup{} \end{table} \begin{table}[H]\centering\setlength{\tabcolsep}{4pt}\caption{Summary statistics for joint VOT error} \begingroup\fontsize{8}{10}\selectfont
+
+\begin{tabular}{lr>{\raggedleft\arraybackslash}p{0.5in}rr>{\raggedleft\arraybackslash}p{0.5in}r>{\raggedleft\arraybackslash}p{0.5in}>{\raggedright\arraybackslash}p{0.5in}}
+\toprule
+\multicolumn{1}{c}{ } & \multicolumn{6}{c}{Value of time error} \\
+\cmidrule(l{3pt}r{3pt}){2-7}
+Model & Minimum & First Quantile & Median & Mean & Third Quantile & Maximum & McFadden $R^2$ & Significant variables\\
+\midrule
+Age$\times$Trip purpose & 4.98 & 17.59 & 25.03 & 132.78 & 41.07 & 1395.32 & 0.56 & 55 of 60\\
+Age$\times$Time of day & 4.24 & 13.78 & 26.41 & 72.43 & 52.73 & 615.02 & 0.55 & 55 of 60\\
+Distance$\times$Age & 1.96 & 19.95 & 36.22 & 275.93 & 412.00 & 2463.84 & 0.57 & 76 of 102\\
+Distance$\times$Trip purpose & 2.45 & 15.76 & 25.84 & 307.83 & 515.06 & 2582.28 & 0.58 & 52 of 60\\
+Distance$\times$Time of day & 5.76 & 11.81 & 40.62 & 1550.21 & 193.05 & 36577.78 & 0.56 & 51 of 60\\
+Gender$\times$Age & 7.41 & 16.53 & 19.00 & 34.70 & 22.56 & 238.32 & 0.54 & 31 of 32\\
+Gender$\times$Income & 7.15 & 11.40 & 15.23 & 16.64 & 19.48 & 32.61 & 0.55 & 28 of 28\\
+Gender$\times$Distance & 7.19 & 9.33 & 16.08 & 130.11 & 90.80 & 998.04 & 0.55 & 30 of 32\\
+Gender$\times$Trip purpose & 9.99 & 12.15 & 17.90 & 17.95 & 23.79 & 26.53 & 0.55 & 20 of 20\\
+Gender$\times$Time of day & 4.00 & 11.70 & 15.98 & 22.33 & 26.36 & 65.54 & 0.53 & 20 of 20\\
+Income$\times$Age & 7.19 & 15.96 & 26.47 & 93.19 & 41.43 & 710.53 & 0.56 & 80 of 88\\
+Income$\times$Distance & 7.87 & 17.91 & 35.77 & 622.37 & 190.09 & 19865.73 & 0.58 & 75 of 88\\
+Income$\times$Trip Purpose & 3.48 & 15.42 & 24.34 & 30.63 & 40.98 & 76.47 & 0.58 & 52 of 52\\
+Income$\times$Time of day & 3.81 & 13.04 & 17.74 & 65.33 & 39.46 & 927.82 & 0.56 & 51 of 52\\
+Trip purpose$\times$Time of day & 4.56 & 11.26 & 22.08 & 36.25 & 49.09 & 184.68 & 0.56 & 36 of 36\\
+\bottomrule
+\end{tabular}
+\endgroup{} \end{table} \begin{table}[H]\centering\caption{Summary of individual variable model estimation results} \begingroup\fontsize{8}{10}\selectfont
+
+\begin{tabular}{lrllllllll}
+\toprule
+\multicolumn{2}{c}{ } & \multicolumn{4}{c}{Travel time} & \multicolumn{4}{c}{Travel cost} \\
+\cmidrule(l{3pt}r{3pt}){3-6} \cmidrule(l{3pt}r{3pt}){7-10}
+Variable & VOT & $\beta$ & SE & z-value & p-value & $\beta$ & SE & z-value & p-value\\
+\midrule
+\addlinespace[0.3em]
+\multicolumn{10}{l}{\textbf{Age model, $McFadden~R^2 = 0.54$}}\\
+\hline
+\hspace{1em}16-20 & 14.2 & -0.09 & 5.58e-03 & -16.66 & $<$ 2.2e-16 *** & -0.39 & 8.62e-02 & -4.55 & 5.5e-06 ***\\
+\hspace{1em}20-29 & 82.8 & -0.10 & 3.48e-03 & -28.98 & $<$ 2.2e-16 *** & -0.07 & 1.93e-02 & -3.80 & 1.5e-04 ***\\
+\hspace{1em}30-39 & 39.1 & -0.15 & 4.10e-03 & -35.97 & $<$ 2.2e-16 *** & -0.23 & 2.49e-02 & -9.09 & $<$ 2.2e-16 ***\\
+\hspace{1em}40-49 & 50.9 & -0.16 & 3.70e-03 & -43.49 & $<$ 2.2e-16 *** & -0.19 & 1.80e-02 & -10.54 & $<$ 2.2e-16 ***\\
+\hspace{1em}50-59 & 58.6 & -0.16 & 3.29e-03 & -47.33 & $<$ 2.2e-16 *** & -0.16 & 1.43e-02 & -11.16 & $<$ 2.2e-16 ***\\
+\hspace{1em}60-69 & 56.0 & -0.15 & 3.96e-03 & -38.51 & $<$ 2.2e-16 *** & -0.16 & 1.85e-02 & -8.82 & $<$ 2.2e-16 ***\\
+\hspace{1em}$\geq$ 70 & 35.4 & -0.17 & 7.00e-03 & -24.17 & $<$ 2.2e-16 *** & -0.29 & 4.27e-02 & -6.71 & 1.9e-11 ***\\
+\addlinespace[0.3em]
+\multicolumn{10}{l}{\textbf{Gender, $McFadden~R^2 = 0.53$}}\\
+\hline
+\hspace{1em}Female & 50.4 & -0.14 & 2.45e-03 & -58.68 & $<$ 2.2e-16 *** & -0.17 & 1.20e-02 & -14.34 & $<$ 2.2e-16 ***\\
+\hspace{1em}Male & 48.1 & -0.15 & 2.66e-03 & -54.65 & $<$ 2.2e-16 *** & -0.18 & 1.26e-02 & -14.39 & $<$ 2.2e-16 ***\\
+\addlinespace[0.3em]
+\multicolumn{10}{l}{\textbf{Income model, $McFadden~R^2 = 0.55$}}\\
+\hline
+\hspace{1em}< 25,000 & 26.9 & -0.09 & 2.62e-03 & -35.56 & $<$ 2.2e-16 *** & -0.21 & 3.15e-02 & -6.59 & 4.5e-11 ***\\
+\hspace{1em}25,000-49,999 & 33.2 & -0.14 & 4.14e-03 & -34.37 & $<$ 2.2e-16 *** & -0.26 & 3.21e-02 & -7.99 & 1.3e-15 ***\\
+\hspace{1em}50,000-74,999 & 42.2 & -0.15 & 4.11e-03 & -37.19 & $<$ 2.2e-16 *** & -0.22 & 2.52e-02 & -8.61 & $<$ 2.2e-16 ***\\
+\hspace{1em}75,000-99,999 & 32.3 & -0.16 & 4.46e-03 & -36.36 & $<$ 2.2e-16 *** & -0.30 & 2.90e-02 & -10.38 & $<$ 2.2e-16 ***\\
+\hspace{1em}100,000-149,999 & 50.1 & -0.18 & 4.48e-03 & -39.41 & $<$ 2.2e-16 *** & -0.21 & 1.86e-02 & -11.36 & $<$ 2.2e-16 ***\\
+\hspace{1em}$\geq$ 150,000 & 71.7 & -0.18 & 4.14e-03 & -42.63 & $<$ 2.2e-16 *** & -0.15 & 1.27e-02 & -11.64 & $<$ 2.2e-16 ***\\
+\addlinespace[0.3em]
+\multicolumn{10}{l}{\textbf{Mode model, $McFadden~R^2 = 0.65$}}\\
+\hline
+\hspace{1em}Rail & 10.4 & -0.18 & 6.48e-03 & -28.51 & $<$ 2.2e-16 *** & -1.07 & 6.66e-02 & -16.04 & $<$ 2.2e-16 ***\\
+\hspace{1em}Drive & 4.0 & 0.05 & 5.30e-03 & 8.85 & $<$ 2.2e-16 *** & 0.71 & 1.98e-02 & 35.73 & $<$ 2.2e-16 ***\\
+\hspace{1em}Bus & 5.9 & -0.16 & 3.68e-03 & -42.25 & $<$ 2.2e-16 *** & -1.57 & 5.55e-02 & -28.27 & $<$ 2.2e-16 ***\\
+\hspace{1em}Subway & 6.6 & -0.17 & 3.96e-03 & -43.66 & $<$ 2.2e-16 *** & -1.57 & 5.01e-02 & -31.28 & $<$ 2.2e-16 ***\\
+\hspace{1em}Taxi & 52.2 & 0.99 & 3.93e-02 & 25.13 & $<$ 2.2e-16 *** & 1.14 & 3.78e-02 & 30.03 & $<$ 2.2e-16 ***\\
+\addlinespace[0.3em]
+\multicolumn{10}{l}{\textbf{Travel distance model, $McFadden~R^2 = 0.55$}}\\
+\hline
+\hspace{1em}< 0.5 & 28.0 & -0.25 & 1.05e-02 & -23.54 & $<$ 2.2e-16 *** & -0.53 & 6.24e-02 & -8.45 & $<$ 2.2e-16 ***\\
+\hspace{1em}0.5-1 & 25.5 & -0.19 & 5.59e-03 & -34.71 & $<$ 2.2e-16 *** & -0.46 & 4.39e-02 & -10.43 & $<$ 2.2e-16 ***\\
+\hspace{1em}1-2 & 34.1 & -0.16 & 3.44e-03 & -46.37 & $<$ 2.2e-16 *** & -0.28 & 2.79e-02 & -10.08 & $<$ 2.2e-16 ***\\
+\hspace{1em}2-4 & 32.6 & -0.13 & 2.75e-03 & -47.50 & $<$ 2.2e-16 *** & -0.24 & 2.50e-02 & -9.61 & $<$ 2.2e-16 ***\\
+\hspace{1em}4-8 & 57.1 & -0.13 & 3.47e-03 & -38.36 & $<$ 2.2e-16 *** & -0.14 & 1.38e-02 & -10.16 & $<$ 2.2e-16 ***\\
+\hspace{1em}8-12 & 157.8 & -0.11 & 5.22e-03 & -21.42 & $<$ 2.2e-16 *** & -0.04 & 9.95e-03 & -4.27 & 2.0e-05 ***\\
+\hspace{1em}$\geq$ 12 & 291.3 & -0.10 & 8.36e-03 & -11.54 & $<$ 2.2e-16 *** & -0.02 & 1.11e-02 & -1.80 & 7.2e-02\\
+\addlinespace[0.3em]
+\multicolumn{10}{l}{\textbf{Trip purpose model, $McFadden~R^2 = 0.55$}}\\
+\hline
+\hspace{1em}Other & 41.5 & -0.28 & 1.03e-02 & -26.72 & $<$ 2.2e-16 *** & -0.40 & 4.08e-02 & -9.79 & $<$ 2.2e-16 ***\\
+\hspace{1em}Recreation & 54.6 & -0.16 & 4.30e-03 & -37.08 & $<$ 2.2e-16 *** & -0.17 & 1.97e-02 & -8.86 & $<$ 2.2e-16 ***\\
+\hspace{1em}Shopping/errands & 42.2 & -0.16 & 3.35e-03 & -48.09 & $<$ 2.2e-16 *** & -0.23 & 1.93e-02 & -11.83 & $<$ 2.2e-16 ***\\
+\hspace{1em}Work/school & 70.2 & -0.12 & 2.27e-03 & -54.59 & $<$ 2.2e-16 *** & -0.11 & 9.86e-03 & -10.73 & $<$ 2.2e-16 ***\\
+\addlinespace[0.3em]
+\multicolumn{10}{l}{\textbf{Time-of-day model, $McFadden~R^2 = 0.53$}}\\
+\hline
+\hspace{1em}AM & 17.2 & -0.14 & 3.79e-03 & -36.60 & $<$ 2.2e-16 *** & -0.48 & 3.27e-02 & -14.79 & $<$ 2.2e-16 ***\\
+\hspace{1em}Midday & 53.3 & -0.15 & 2.88e-03 & -53.32 & $<$ 2.2e-16 *** & -0.17 & 1.41e-02 & -12.26 & $<$ 2.2e-16 ***\\
+\hspace{1em}PM & 57.5 & -0.15 & 3.22e-03 & -45.51 & $<$ 2.2e-16 *** & -0.15 & 1.56e-02 & -9.83 & $<$ 2.2e-16 ***\\
+\hspace{1em}Night & 91.8 & -0.12 & 3.24e-03 & -37.99 & $<$ 2.2e-16 *** & -0.08 & 1.24e-02 & -6.52 & 7.2e-11 ***\\
+\bottomrule
+\multicolumn{10}{l}{\textsuperscript{*} Significance level codes: '***' 99.99\%, '**' 99\%, '*' 95\%}\\
+\end{tabular}
+\endgroup{} \end{table} \begin{table}[H]\centering\caption{Summary of parametric fitting results} \begingroup\fontsize{9}{11}\selectfont
+
+\begin{tabular}{lllllllll}
+\toprule
+\multicolumn{3}{c}{Model} & \multicolumn{5}{c}{Parameters} \\
+\cmidrule(l{3pt}r{3pt}){1-3} \cmidrule(l{3pt}r{3pt}){4-8}
+Variable & Unit & Function & $\alpha$ & $\beta$ & $b$ & $\mu$ & $\sigma$ & $R^2$\\
+\midrule
+Income & \$10,000 & $VOT(x)=e^{\alpha+\beta x}$ & 3.232 & 0.051 &  &  &  & 0.741\\
+Travel distance & Miles & $VOT(x)=e^{\alpha+\beta x}$ & 3.124 & 0.183 &  &  &  & 0.984\\
+Age & Years & $VOT(x)=\frac{b}{\sigma\sqrt{2\pi}}e^{-\frac{(x-\mu)^2}{2\sigma^2}}$ &  &  & 3235.246 & 54.077 & 22.466 & 0.999\\
+\bottomrule
+\end{tabular}
+\endgroup{} \end{table}\newpage \begingroup\fontsize{8}{10}\selectfont
+
+\begin{longtable}[t]{lllllll}
+\caption{\label{tab:}Joint multinomial model results}\\
+\toprule
+\multicolumn{1}{c}{ } & \multicolumn{3}{c}{Travel cost } & \multicolumn{3}{c}{Travel time} \\
+\cmidrule(l{3pt}r{3pt}){2-4} \cmidrule(l{3pt}r{3pt}){5-7}
+Variables & $\beta_C$ & SE$_C$ & p-value$_C$ & $\beta_T$ & SE$_T$ & p-value$_T$\\
+\midrule
+\endfirsthead
+\caption[]{Joint multinomial model results \textit{(continued)}}\\
+\toprule
+\multicolumn{1}{c}{ } & \multicolumn{3}{c}{Travel cost } & \multicolumn{3}{c}{Travel time} \\
+\cmidrule(l{3pt}r{3pt}){2-4} \cmidrule(l{3pt}r{3pt}){5-7}
+Variables & $\beta_C$ & SE$_C$ & p-value$_C$ & $\beta_T$ & SE$_T$ & p-value$_T$\\
+\midrule
+\endhead
+\
+\endfoot
+\bottomrule
+\multicolumn{7}{l}{\textsuperscript{*} Significance level codes: '***' 99.99\%, '**' 99\%, '*' 95\%}\\
+\endlastfoot
+\addlinespace[0.3em]
+\multicolumn{7}{l}{\textbf{Age$\times$Trip purpose, McFadden $R^2 = 0.56$}}\\
+\hline
+\hspace{1em}Rail (intercept) & 1.51 & 0.07 & $<$ 2.2e-16 *** &  &  & \\
+\hspace{1em}Bus (intercept) & 1.52 & 0.04 & $<$ 2.2e-16 *** &  &  & \\
+\hspace{1em}Subway (intercept) & 1.74 & 0.04 & $<$ 2.2e-16 *** &  &  & \\
+\hspace{1em}Taxi (intercept) & -4.43 & 0.17 & $<$ 2.2e-16 *** &  &  & \\
+\hspace{1em}16-20$\times$Other & -4.48 & 1672.93 & 1.0e+00 & -1.27 & 194.96 & 9.9e-01\\
+\hspace{1em}20-29$\times$Other & -0.77 & 0.22 & 5.5e-04 *** & -0.27 & 0.05 & 7.7e-09 ***\\
+\hspace{1em}30-39$\times$Other & -0.41 & 0.13 & 9.6e-04 *** & -0.25 & 0.02 & $<$ 2.2e-16 ***\\
+\hspace{1em}40-49$\times$Other & -0.42 & 0.07 & 2.0e-09 *** & -0.3 & 0.02 & $<$ 2.2e-16 ***\\
+\hspace{1em}50-59$\times$Other & -0.34 & 0.06 & 4.1e-08 *** & -0.27 & 0.02 & $<$ 2.2e-16 ***\\
+\hspace{1em}60-69$\times$Other & -1.2 & 0.29 & 4.0e-05 *** & -0.31 & 0.04 & 1.3e-14 ***\\
+\hspace{1em}$\geq$ 70$\times$Other & -0.05 & 0.06 & 4.5e-01 & -0.23 & 0.05 & 1.2e-06 ***\\
+\hspace{1em}16-20$\times$Recreation & -1.66 & 0.48 & 5.5e-04 *** & -0.13 & 0.02 & 1.1e-07 ***\\
+\hspace{1em}20-29$\times$Recreation & -0.07 & 0.03 & 3.5e-02 * & -0.13 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}30-39$\times$Recreation & -0.2 & 0.06 & 7.4e-04 *** & -0.16 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}40-49$\times$Recreation & -0.13 & 0.03 & 1.4e-05 *** & -0.18 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}50-59$\times$Recreation & -0.19 & 0.04 & 2.0e-05 *** & -0.16 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}60-69$\times$Recreation & -0.28 & 0.06 & 3.2e-06 *** & -0.16 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}$\geq$ 70$\times$Recreation & -0.32 & 0.09 & 3.2e-04 *** & -0.18 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}16-20$\times$Shopping/errands & -0.73 & 0.31 & 1.9e-02 * & -0.1 & 0.02 & 2.8e-11 ***\\
+\hspace{1em}20-29$\times$Shopping/errands & -0.07 & 0.05 & 1.3e-01 & -0.12 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}30-39$\times$Shopping/errands & -0.42 & 0.08 & 5.0e-07 *** & -0.16 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}40-49$\times$Shopping/errands & -0.3 & 0.05 & 3.0e-11 *** & -0.18 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}50-59$\times$Shopping/errands & -0.16 & 0.03 & 3.3e-10 *** & -0.17 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}60-69$\times$Shopping/errands & -0.18 & 0.03 & 1.5e-09 *** & -0.16 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}$\geq$ 70$\times$Shopping/errands & -0.57 & 0.11 & 6.7e-08 *** & -0.18 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}16-20$\times$Work/school & -0.26 & 0.09 & 4.8e-03 ** & -0.08 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}20-29$\times$Work/school & -0.06 & 0.02 & 2.0e-02 * & -0.09 & 0 & $<$ 2.2e-16 ***\\
+\hspace{1em}30-39$\times$Work/school & -0.14 & 0.03 & 7.9e-08 *** & -0.13 & 0 & $<$ 2.2e-16 ***\\
+\hspace{1em}40-49$\times$Work/school & -0.1 & 0.02 & 4.4e-08 *** & -0.13 & 0 & $<$ 2.2e-16 ***\\
+\hspace{1em}50-59$\times$Work/school & -0.12 & 0.02 & 2.1e-12 *** & -0.14 & 0 & $<$ 2.2e-16 ***\\
+\hspace{1em}60-69$\times$Work/school & -0.1 & 0.02 & 2.5e-06 *** & -0.14 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}$\geq$ 70$\times$Work/school & -0.05 & 0.06 & 3.7e-01 & -0.13 & 0.02 & $<$ 2.2e-16 ***\\
+\addlinespace[0.3em]
+\multicolumn{7}{l}{\textbf{Age$\times$Time of day, McFadden $R^2 = 0.55$}}\\
+\hline
+\hspace{1em}Rail (intercept) & 1.4 & 0.07 & $<$ 2.2e-16 *** &  &  & \\
+\hspace{1em}Bus (intercept) & 1.38 & 0.04 & $<$ 2.2e-16 *** &  &  & \\
+\hspace{1em}Subway (intercept) & 1.62 & 0.04 & $<$ 2.2e-16 *** &  &  & \\
+\hspace{1em}Taxi (intercept) & -4.49 & 0.16 & $<$ 2.2e-16 *** &  &  & \\
+\hspace{1em}16-20$\times$AM & -0.54 & 0.3 & 7.4e-02 & -0.09 & 0.01 & 2.9e-09 ***\\
+\hspace{1em}20-29$\times$AM & -0.63 & 0.12 & 8.2e-08 *** & -0.11 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}30-39$\times$AM & -0.44 & 0.07 & 4.6e-10 *** & -0.14 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}40-49$\times$AM & -0.45 & 0.06 & 3.1e-12 *** & -0.15 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}50-59$\times$AM & -0.67 & 0.07 & $<$ 2.2e-16 *** & -0.15 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}60-69$\times$AM & -0.41 & 0.1 & 3.1e-05 *** & -0.14 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}$\geq$ 70$\times$AM & -0.03 & 0.08 & 7.0e-01 & -0.15 & 0.02 & $<$ 2.2e-16 ***\\
+\hspace{1em}16-20$\times$Midday & -0.28 & 0.12 & 1.5e-02 * & -0.1 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}20-29$\times$Midday & -0.05 & 0.03 & 1.1e-01 & -0.1 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}30-39$\times$Midday & -0.16 & 0.04 & 1.5e-05 *** & -0.15 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}40-49$\times$Midday & -0.27 & 0.03 & 9.8e-15 *** & -0.18 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}50-59$\times$Midday & -0.14 & 0.02 & 2.5e-12 *** & -0.16 & 0 & $<$ 2.2e-16 ***\\
+\hspace{1em}60-69$\times$Midday & -0.14 & 0.02 & 1.9e-09 *** & -0.15 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}$\geq$ 70$\times$Midday & -0.42 & 0.08 & 5.7e-08 *** & -0.18 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}16-20$\times$Night & -0.47 & 0.17 & 7.2e-03 ** & -0.09 & 0.01 & 3.1e-15 ***\\
+\hspace{1em}20-29$\times$Night & 0 & 0.02 & 8.4e-01 & -0.09 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}30-39$\times$Night & -0.13 & 0.04 & 6.1e-04 *** & -0.13 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}40-49$\times$Night & -0.05 & 0.02 & 6.7e-03 ** & -0.12 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}50-59$\times$Night & -0.1 & 0.02 & 3.2e-05 *** & -0.14 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}60-69$\times$Night & -0.19 & 0.06 & 8.4e-04 *** & -0.15 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}$\geq$ 70$\times$Night & -0.47 & 0.24 & 5.1e-02 & -0.18 & 0.03 & 4.8e-08 ***\\
+\hspace{1em}16-20$\times$PM & -0.48 & 0.2 & 2.0e-02 * & -0.08 & 0.01 & 1.1e-15 ***\\
+\hspace{1em}20-29$\times$PM & -0.13 & 0.06 & 2.2e-02 * & -0.11 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}30-39$\times$PM & -0.29 & 0.06 & 5.2e-07 *** & -0.15 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}40-49$\times$PM & -0.2 & 0.04 & 5.9e-08 *** & -0.17 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}50-59$\times$PM & -0.12 & 0.02 & 3.6e-08 *** & -0.15 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}60-69$\times$PM & -0.12 & 0.03 & 9.4e-05 *** & -0.16 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}$\geq$ 70$\times$PM & -0.15 & 0.07 & 5.0e-02 * & -0.16 & 0.02 & $<$ 2.2e-16 ***\\
+\addlinespace[0.3em]
+\multicolumn{7}{l}{\textbf{Distance$\times$Age, McFadden $R^2 = 0.57$}}\\
+\hline
+\hspace{1em}Rail (intercept) & 1.57 & 0.07 & $<$ 2.2e-16 *** &  &  & \\
+\hspace{1em}Bus (intercept) & 1.8 & 0.05 & $<$ 2.2e-16 *** &  &  & \\
+\hspace{1em}Subway (intercept) & 1.85 & 0.05 & $<$ 2.2e-16 *** &  &  & \\
+\hspace{1em}Taxi (intercept) & -4.2 & 0.21 & $<$ 2.2e-16 *** &  &  & \\
+\hspace{1em}$<$ 0.5$\times$16-20 & -0.39 & 0.4 & 3.3e-01 & -0.14 & 0.04 & 1.3e-03 **\\
+\hspace{1em}0.5-1$\times$16-20 & -0.57 & 0.41 & 1.7e-01 & -0.13 & 0.03 & 4.3e-05 ***\\
+\hspace{1em}1-2$\times$16-20 & -0.12 & 0.11 & 2.6e-01 & -0.12 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}2-4$\times$16-20 & -2.54 & 0.62 & 4.6e-05 *** & -0.11 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}4-8$\times$16-20 & -0.17 & 0.16 & 2.9e-01 & -0.06 & 0.01 & 2.5e-09 ***\\
+\hspace{1em}8-12$\times$16-20 & -32.8 & 3976.68 & 9.9e-01 & -6.28 & 760.52 & 9.9e-01\\
+\hspace{1em}$\geq$ 12$\times$16-20 & -0.58 & 3035.51 & 1.0e+00 & -0.74 & 1418.32 & 1.0e+00\\
+\hspace{1em}$<$ 0.5$\times$20-29 & 0.1 & 0.07 & 2.0e-01 & -0.32 & 0.04 & 2.0e-14 ***\\
+\hspace{1em}0.5-1$\times$20-29 & -0.09 & 0.13 & 4.6e-01 & -0.12 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}1-2$\times$20-29 & -0.01 & 0.06 & 8.8e-01 & -0.12 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}2-4$\times$20-29 & -0.15 & 0.07 & 2.2e-02 * & -0.1 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}4-8$\times$20-29 & -0.03 & 0.02 & 1.6e-01 & -0.1 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}8-12$\times$20-29 & -0.15 & 0.07 & 2.7e-02 * & -0.12 & 0.02 & 7.9e-11 ***\\
+\hspace{1em}$\geq$ 12$\times$20-29 & 0 & 0.03 & 8.9e-01 & -0.05 & 0.01 & 5.4e-06 ***\\
+\hspace{1em}$<$ 0.5$\times$30-39 & -0.15 & 0.12 & 2.1e-01 & -0.26 & 0.02 & $<$ 2.2e-16 ***\\
+\hspace{1em}0.5-1$\times$30-39 & -0.33 & 0.09 & 2.5e-04 *** & -0.2 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}1-2$\times$30-39 & -0.54 & 0.11 & 1.7e-06 *** & -0.17 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}2-4$\times$30-39 & -0.41 & 0.1 & 3.8e-05 *** & -0.13 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}4-8$\times$30-39 & -0.42 & 0.09 & 2.6e-06 *** & -0.17 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}8-12$\times$30-39 & -0.04 & 0.03 & 1.3e-01 & -0.11 & 0.01 & 6.7e-16 ***\\
+\hspace{1em}$\geq$ 12$\times$30-39 & -0.04 & 0.04 & 2.6e-01 & -0.16 & 0.05 & 5.3e-04 ***\\
+\hspace{1em}$<$ 0.5$\times$40-49 & -1.02 & 0.18 & 5.4e-09 *** & -0.27 & 0.03 & $<$ 2.2e-16 ***\\
+\hspace{1em}0.5-1$\times$40-49 & -0.51 & 0.09 & 3.5e-09 *** & -0.25 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}1-2$\times$40-49 & -0.22 & 0.05 & 2.4e-06 *** & -0.18 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}2-4$\times$40-49 & -0.14 & 0.03 & 2.9e-05 *** & -0.14 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}4-8$\times$40-49 & -0.12 & 0.03 & 7.7e-06 *** & -0.13 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}8-12$\times$40-49 & -0.03 & 0.02 & 1.2e-01 & -0.12 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}$\geq$ 12$\times$40-49 & -0.01 & 0.02 & 5.6e-01 & -0.09 & 0.02 & 3.1e-09 ***\\
+\hspace{1em}$<$ 0.5$\times$50-59 & -0.54 & 0.12 & 6.1e-06 *** & -0.27 & 0.02 & $<$ 2.2e-16 ***\\
+\hspace{1em}0.5-1$\times$50-59 & -0.37 & 0.07 & 5.1e-08 *** & -0.21 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}1-2$\times$50-59 & -0.31 & 0.06 & 2.2e-07 *** & -0.17 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}2-4$\times$50-59 & -0.2 & 0.04 & 2.5e-06 *** & -0.14 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}4-8$\times$50-59 & -0.19 & 0.03 & 4.0e-11 *** & -0.16 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}8-12$\times$50-59 & -0.02 & 0.01 & 1.4e-01 & -0.11 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}$\geq$ 12$\times$50-59 & -0.11 & 0.04 & 1.6e-02 * & -0.2 & 0.05 & 1.6e-05 ***\\
+\hspace{1em}$<$ 0.5$\times$60-69 & -0.55 & 0.17 & 1.3e-03 ** & -0.22 & 0.02 & $<$ 2.2e-16 ***\\
+\hspace{1em}0.5-1$\times$60-69 & -0.91 & 0.16 & 1.7e-08 *** & -0.15 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}1-2$\times$60-69 & -0.27 & 0.06 & 4.3e-06 *** & -0.17 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}2-4$\times$60-69 & -0.29 & 0.07 & 8.7e-05 *** & -0.15 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}4-8$\times$60-69 & -0.12 & 0.03 & 9.0e-06 *** & -0.14 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}8-12$\times$60-69 & -0.05 & 0.03 & 9.2e-02 & -0.11 & 0.01 & 3.1e-14 ***\\
+\hspace{1em}$\geq$ 12$\times$60-69 & 0.02 & 0.02 & 2.0e-01 & -0.09 & 0.02 & 4.1e-06 ***\\
+\hspace{1em}$<$ 0.5$\times$$\geq$ 70 & -2.13 & 0.29 & 3.7e-13 *** & -0.11 & 0.03 & 1.2e-03 **\\
+\hspace{1em}0.5-1$\times$$\geq$ 70 & -0.54 & 0.22 & 1.2e-02 * & -0.22 & 0.03 & $<$ 2.2e-16 ***\\
+\hspace{1em}1-2$\times$$\geq$ 70 & -0.29 & 0.08 & 2.4e-04 *** & -0.18 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}2-4$\times$$\geq$ 70 & -0.28 & 0.1 & 6.9e-03 ** & -0.16 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}4-8$\times$$\geq$ 70 & -0.08 & 0.04 & 7.6e-02 & -0.13 & 0.02 & $<$ 2.2e-16 ***\\
+\hspace{1em}8-12$\times$$\geq$ 70 & -0.83 & 0.77 & 2.8e-01 & -0.47 & 0.34 & 1.7e-01\\
+\hspace{1em}$\geq$ 12$\times$$\geq$ 70 & -1.18 & 5663.96 & 1.0e+00 & -0.58 & 928.72 & 1.0e+00\\
+\addlinespace[0.3em]
+\multicolumn{7}{l}{\textbf{Distance$\times$Trip purpose, McFadden $R^2 = 0.58$}}\\
+\hline
+\hspace{1em}Rail (intercept) & 1.62 & 0.07 & $<$ 2.2e-16 *** &  &  & \\
+\hspace{1em}Bus (intercept) & 1.89 & 0.05 & $<$ 2.2e-16 *** &  &  & \\
+\hspace{1em}Subway (intercept) & 1.88 & 0.05 & $<$ 2.2e-16 *** &  &  \vphantom{1} & \\
+\hspace{1em}Taxi (intercept) & -4.04 & 0.21 & $<$ 2.2e-16 *** &  &  & \\
+\hspace{1em}$<$ 0.5$\times$Other & -3.3 & 0.66 & 5.3e-07 *** & -0.22 & 0.09 & 2.0e-02 *\\
+\hspace{1em}0.5-1$\times$Other & -2.8 & 0.38 & 2.8e-13 *** & -0.16 & 0.03 & 1.6e-06 ***\\
+\hspace{1em}1-2$\times$Other & -1.09 & 0.37 & 3.2e-03 ** & -0.29 & 0.03 & $<$ 2.2e-16 ***\\
+\hspace{1em}2-4$\times$Other & -0.53 & 0.15 & 2.6e-04 *** & -0.23 & 0.02 & $<$ 2.2e-16 ***\\
+\hspace{1em}4-8$\times$Other & -0.3 & 0.08 & 1.5e-04 *** & -0.28 & 0.04 & 9.8e-12 ***\\
+\hspace{1em}8-12$\times$Other & -0.01 & 0.02 & 6.0e-01 & -0.11 & 0.02 & 1.9e-13 ***\\
+\hspace{1em}$\geq$ 12$\times$Other & -0.11 & 0.14 & 4.2e-01 & -0.21 & 0.09 & 1.6e-02 *\\
+\hspace{1em}$<$ 0.5$\times$Recreation & -1.79 & 0.21 & $<$ 2.2e-16 *** & -0.17 & 0.03 & 2.5e-09 ***\\
+\hspace{1em}0.5-1$\times$Recreation & -0.41 & 0.08 & 9.7e-07 *** & -0.23 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}1-2$\times$Recreation & -0.3 & 0.07 & 4.4e-06 *** & -0.18 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}2-4$\times$Recreation & -0.24 & 0.06 & 9.0e-05 *** & -0.14 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}4-8$\times$Recreation & -0.13 & 0.03 & 8.4e-05 *** & -0.14 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}8-12$\times$Recreation & -0.02 & 0.02 & 2.6e-01 & -0.11 & 0.01 & 1.1e-15 ***\\
+\hspace{1em}$\geq$ 12$\times$Recreation & -0.01 & 0.03 & 8.3e-01 & -0.09 & 0.02 & 1.8e-04 ***\\
+\hspace{1em}$<$ 0.5$\times$Shopping/errands & -1.13 & 0.17 & 6.8e-11 *** & -0.19 & 0.02 & $<$ 2.2e-16 ***\\
+\hspace{1em}0.5-1$\times$Shopping/errands & -0.97 & 0.14 & 9.1e-13 *** & -0.16 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}1-2$\times$Shopping/errands & -0.4 & 0.06 & 1.8e-10 *** & -0.17 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}2-4$\times$Shopping/errands & -0.29 & 0.05 & 2.4e-08 *** & -0.15 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}4-8$\times$Shopping/errands & -0.15 & 0.03 & 7.7e-08 *** & -0.15 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}8-12$\times$Shopping/errands & -0.03 & 0.02 & 1.4e-01 & -0.12 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}$\geq$ 12$\times$Shopping/errands & 0 & 0.02 & 8.6e-01 & -0.11 & 0.02 & 3.6e-06 ***\\
+\hspace{1em}$<$ 0.5$\times$Work/school & 0.02 & 0.06 & 7.7e-01 & -0.25 & 0.02 & $<$ 2.2e-16 ***\\
+\hspace{1em}0.5-1$\times$Work/school & -0.19 & 0.05 & 1.3e-04 *** & -0.18 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}1-2$\times$Work/school & -0.11 & 0.03 & 1.9e-04 *** & -0.14 & 0 & $<$ 2.2e-16 ***\\
+\hspace{1em}2-4$\times$Work/school & -0.15 & 0.03 & 1.6e-07 *** & -0.12 & 0 & $<$ 2.2e-16 ***\\
+\hspace{1em}4-8$\times$Work/school & -0.12 & 0.02 & 1.6e-12 *** & -0.13 & 0 & $<$ 2.2e-16 ***\\
+\hspace{1em}8-12$\times$Work/school & -0.05 & 0.01 & 2.7e-04 *** & -0.12 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}$\geq$ 12$\times$Work/school & -0.02 & 0.02 & 1.7e-01 & -0.09 & 0.01 & $<$ 2.2e-16 ***\\
+\addlinespace[0.3em]
+\multicolumn{7}{l}{\textbf{Distance$\times$Time of day, McFadden $R^2 = 0.56$}}\\
+\hline
+\hspace{1em}Rail (intercept) & 1.49 & 0.07 & $<$ 2.2e-16 *** &  &  \vphantom{1} & \\
+\hspace{1em}Bus (intercept) & 1.73 & 0.05 & $<$ 2.2e-16 *** &  &  & \\
+\hspace{1em}Subway (intercept) & 1.75 & 0.05 & $<$ 2.2e-16 *** &  &  \vphantom{1} & \\
+\hspace{1em}Taxi (intercept) & -4.27 & 0.21 & $<$ 2.2e-16 *** &  &  & \\
+\hspace{1em}$<$ 0.5$\times$AM & -0.38 & 0.12 & 2.5e-03 ** & -0.29 & 0.02 & $<$ 2.2e-16 ***\\
+\hspace{1em}0.5-1$\times$AM & -0.55 & 0.11 & 1.0e-06 *** & -0.2 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}1-2$\times$AM & -0.32 & 0.07 & 1.9e-06 *** & -0.15 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}2-4$\times$AM & -0.55 & 0.1 & 1.1e-08 *** & -0.11 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}4-8$\times$AM & -0.55 & 0.08 & 6.4e-11 *** & -0.14 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}8-12$\times$AM & -0.03 & 0.03 & 3.8e-01 & -0.07 & 0.01 & 2.5e-12 ***\\
+\hspace{1em}$\geq$ 12$\times$AM & -0.37 & 248.07 & 1.0e+00 & -0.55 & 73.09 & 9.9e-01\\
+\hspace{1em}$<$ 0.5$\times$Midday & -0.61 & 0.11 & 2.2e-08 *** & -0.25 & 0.02 & $<$ 2.2e-16 ***\\
+\hspace{1em}0.5-1$\times$Midday & -0.5 & 0.07 & 1.1e-11 *** & -0.2 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}1-2$\times$Midday & -0.36 & 0.05 & 8.0e-13 *** & -0.16 & 0 & $<$ 2.2e-16 ***\\
+\hspace{1em}2-4$\times$Midday & -0.39 & 0.06 & 1.2e-10 *** & -0.15 & 0 & $<$ 2.2e-16 ***\\
+\hspace{1em}4-8$\times$Midday & -0.1 & 0.02 & 1.4e-08 *** & -0.14 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}8-12$\times$Midday & -0.06 & 0.02 & 1.4e-03 ** & -0.14 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}$\geq$ 12$\times$Midday & 0.01 & 0.01 & 6.7e-01 & -0.09 & 0.01 & 6.7e-16 ***\\
+\hspace{1em}$<$ 0.5$\times$Night & -0.8 & 0.22 & 3.0e-04 *** & -0.14 & 0.02 & 9.3e-10 ***\\
+\hspace{1em}0.5-1$\times$Night & -0.08 & 0.06 & 1.6e-01 & -0.17 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}1-2$\times$Night & -0.11 & 0.04 & 6.3e-03 ** & -0.15 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}2-4$\times$Night & -0.1 & 0.03 & 3.5e-03 ** & -0.12 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}4-8$\times$Night & -0.07 & 0.02 & 2.8e-03 ** & -0.12 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}8-12$\times$Night & -0.02 & 0.02 & 3.1e-01 & -0.1 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}$\geq$ 12$\times$Night & -0.03 & 0.02 & 1.8e-01 & -0.09 & 0.01 & 2.0e-10 ***\\
+\hspace{1em}$<$ 0.5$\times$PM & -0.23 & 0.1 & 1.5e-02 * & -0.28 & 0.02 & $<$ 2.2e-16 ***\\
+\hspace{1em}0.5-1$\times$PM & -0.68 & 0.11 & 1.6e-10 *** & -0.18 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}1-2$\times$PM & -0.18 & 0.04 & 6.4e-05 *** & -0.17 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}2-4$\times$PM & -0.12 & 0.03 & 2.2e-04 *** & -0.13 & 0 & $<$ 2.2e-16 ***\\
+\hspace{1em}4-8$\times$PM & -0.16 & 0.03 & 1.1e-08 *** & -0.14 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}8-12$\times$PM & -0.03 & 0.02 & 9.4e-02 & -0.12 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}$\geq$ 12$\times$PM & -0.05 & 0.04 & 2.6e-01 & -0.14 & 0.04 & 1.5e-04 ***\\
+\addlinespace[0.3em]
+\multicolumn{7}{l}{\textbf{Gender$\times$Age, McFadden $R^2 = 0.54$}}\\
+\hline
+\hspace{1em}Rail (intercept) & 1.44 & 0.07 & $<$ 2.2e-16 *** &  &  \vphantom{1} & \\
+\hspace{1em}Bus (intercept) & 1.36 & 0.04 & $<$ 2.2e-16 *** &  &  & \\
+\hspace{1em}Subway (intercept) & 1.65 & 0.04 & $<$ 2.2e-16 *** &  &  & \\
+\hspace{1em}Taxi (intercept) & -4.33 & 0.16 & $<$ 2.2e-16 *** &  &  & \\
+\hspace{1em}Female$\times$16-20 & -0.27 & 0.11 & 1.1e-02 * & -0.1 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}Male$\times$16-20 & -0.49 & 0.12 & 4.7e-05 *** & -0.09 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}Female$\times$20-29 & -0.04 & 0.02 & 5.7e-02 & -0.1 & 0 & $<$ 2.2e-16 ***\\
+\hspace{1em}Male$\times$20-29 & -0.14 & 0.04 & 1.7e-04 *** & -0.11 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}Female$\times$30-39 & -0.22 & 0.03 & 5.8e-12 *** & -0.15 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}Male$\times$30-39 & -0.24 & 0.04 & 2.0e-09 *** & -0.15 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}Female$\times$40-49 & -0.18 & 0.02 & 3.1e-15 *** & -0.16 & 0 & $<$ 2.2e-16 ***\\
+\hspace{1em}Male$\times$40-49 & -0.2 & 0.03 & 1.2e-13 *** & -0.16 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}Female$\times$50-59 & -0.16 & 0.02 & 2.2e-16 *** & -0.15 & 0 & $<$ 2.2e-16 ***\\
+\hspace{1em}Male$\times$50-59 & -0.16 & 0.02 & 2.2e-16 *** & -0.16 & 0 & $<$ 2.2e-16 ***\\
+\hspace{1em}Female$\times$60-69 & -0.17 & 0.03 & 1.1e-10 *** & -0.15 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}Male$\times$60-69 & -0.16 & 0.02 & 1.8e-10 *** & -0.16 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}Female$\times$$\geq$ 70 & -0.28 & 0.06 & 2.9e-06 *** & -0.17 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}Male$\times$$\geq$ 70 & -0.29 & 0.06 & 9.8e-07 *** & -0.17 & 0.01 & $<$ 2.2e-16 ***\\
+\addlinespace[0.3em]
+\multicolumn{7}{l}{\textbf{Gender$\times$Income, McFadden $R^2 = 0.55$}}\\
+\hline
+\hspace{1em}Rail (intercept) & 1.49 & 0.07 & $<$ 2.2e-16 *** &  &  & \\
+\hspace{1em}Bus (intercept) & 1.37 & 0.04 & $<$ 2.2e-16 *** &  &  & \\
+\hspace{1em}Subway (intercept) & 1.66 & 0.04 & $<$ 2.2e-16 *** &  &  & \\
+\hspace{1em}Taxi (intercept) & -4.29 & 0.16 & $<$ 2.2e-16 *** &  &  & \\
+\hspace{1em}Female$\times$$<$ 25,000 & -0.17 & 0.04 & 1.9e-05 *** & -0.09 & 0 & $<$ 2.2e-16 ***\\
+\hspace{1em}Male$\times$$<$ 25,000 & -0.27 & 0.05 & 1.6e-07 *** & -0.1 & 0 & $<$ 2.2e-16 ***\\
+\hspace{1em}Female$\times$25,000-49,999 & -0.16 & 0.03 & 2.0e-06 *** & -0.14 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}Male$\times$25,000-49,999 & -0.48 & 0.07 & 9.9e-12 *** & -0.15 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}Female$\times$50,000-74,999 & -0.17 & 0.03 & 6.4e-10 *** & -0.16 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}Male$\times$50,000-74,999 & -0.3 & 0.05 & 9.0e-11 *** & -0.15 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}Female$\times$75,000-99,999 & -0.26 & 0.04 & 4.1e-13 *** & -0.17 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}Male$\times$75,000-99,999 & -0.35 & 0.05 & 3.0e-14 *** & -0.16 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}Female$\times$100,000-149,999 & -0.2 & 0.02 & 6.7e-16 *** & -0.18 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}Male$\times$100,000-149,999 & -0.22 & 0.03 & 2.2e-16 *** & -0.18 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}Female$\times$$\geq$ 150,000 & -0.2 & 0.02 & $<$ 2.2e-16 *** & -0.19 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}Male$\times$$\geq$ 150,000 & -0.11 & 0.01 & 5.4e-13 *** & -0.17 & 0.01 & $<$ 2.2e-16 ***\\
+\addlinespace[0.3em]
+\multicolumn{7}{l}{\textbf{Gender$\times$Distance, McFadden $R^2 = 0.55$}}\\
+\hline
+\hspace{1em}Rail (intercept) & 1.52 & 0.07 & $<$ 2.2e-16 *** &  &  & \\
+\hspace{1em}Bus (intercept) & 1.71 & 0.05 & $<$ 2.2e-16 *** &  &  & \\
+\hspace{1em}Subway (intercept) & 1.77 & 0.05 & $<$ 2.2e-16 *** &  &  & \\
+\hspace{1em}Taxi (intercept) & -3.9 & 0.21 & $<$ 2.2e-16 *** &  &  & \\
+\hspace{1em}Female$\times$$<$ 0.5 & -0.64 & 0.09 & 2.8e-13 *** & -0.24 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}Male$\times$$<$ 0.5 & -0.39 & 0.08 & 3.6e-06 *** & -0.25 & 0.02 & $<$ 2.2e-16 ***\\
+\hspace{1em}Female$\times$0.5-1 & -0.48 & 0.06 & 3.6e-15 *** & -0.19 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}Male$\times$0.5-1 & -0.42 & 0.06 & 8.3e-13 *** & -0.2 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}Female$\times$1-2 & -0.22 & 0.03 & 5.3e-12 *** & -0.15 & 0 & $<$ 2.2e-16 ***\\
+\hspace{1em}Male$\times$1-2 & -0.38 & 0.05 & 4.0e-15 *** & -0.17 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}Female$\times$2-4 & -0.18 & 0.03 & 1.1e-11 *** & -0.13 & 0 & $<$ 2.2e-16 ***\\
+\hspace{1em}Male$\times$2-4 & -0.4 & 0.06 & 6.7e-12 *** & -0.13 & 0 & $<$ 2.2e-16 ***\\
+\hspace{1em}Female$\times$4-8 & -0.12 & 0.02 & 4.6e-13 *** & -0.13 & 0 & $<$ 2.2e-16 ***\\
+\hspace{1em}Male$\times$4-8 & -0.16 & 0.02 & 1.2e-13 *** & -0.13 & 0 & $<$ 2.2e-16 ***\\
+\hspace{1em}Female$\times$8-12 & -0.05 & 0.01 & 1.1e-03 ** & -0.11 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}Male$\times$8-12 & -0.03 & 0.01 & 5.4e-03 ** & -0.11 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}Female$\times$$\geq$ 12 & -0.01 & 0.01 & 6.2e-01 & -0.08 & 0.01 & 6.7e-16 ***\\
+\hspace{1em}Male$\times$$\geq$ 12 & -0.03 & 0.02 & 5.7e-02 & -0.11 & 0.01 & $<$ 2.2e-16 ***\\
+\addlinespace[0.3em]
+\multicolumn{7}{l}{\textbf{Gender$\times$Trip purpose, McFadden $R^2 = 0.55$}}\\
+\hline
+\hspace{1em}Rail (intercept) & 1.48 & 0.07 & $<$ 2.2e-16 *** &  &  & \\
+\hspace{1em}Bus (intercept) & 1.47 & 0.04 & $<$ 2.2e-16 *** &  &  & \\
+\hspace{1em}Subway (intercept) & 1.7 & 0.04 & $<$ 2.2e-16 *** &  &  & \\
+\hspace{1em}Taxi (intercept) & -4.31 & 0.16 & $<$ 2.2e-16 *** &  &  & \\
+\hspace{1em}Female$\times$Other & -0.67 & 0.09 & 9.6e-13 *** & -0.28 & 0.02 & $<$ 2.2e-16 ***\\
+\hspace{1em}Male$\times$Other & -0.28 & 0.04 & 2.3e-11 *** & -0.26 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}Female$\times$Recreation & -0.15 & 0.02 & 4.8e-10 *** & -0.16 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}Male$\times$Recreation & -0.22 & 0.03 & 1.1e-11 *** & -0.16 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}Female$\times$Shopping/errands & -0.2 & 0.02 & $<$ 2.2e-16 *** & -0.16 & 0 & $<$ 2.2e-16 ***\\
+\hspace{1em}Male$\times$Shopping/errands & -0.29 & 0.03 & $<$ 2.2e-16 *** & -0.17 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}Female$\times$Work/school & -0.1 & 0.01 & 1.6e-13 *** & -0.12 & 0 & $<$ 2.2e-16 ***\\
+\hspace{1em}Male$\times$Work/school & -0.11 & 0.01 & $<$ 2.2e-16 *** & -0.13 & 0 & $<$ 2.2e-16 ***\\
+\addlinespace[0.3em]
+\multicolumn{7}{l}{\textbf{Gender$\times$Time of day, McFadden $R^2 = 0.53$}}\\
+\hline
+\hspace{1em}Rail (intercept) & 1.36 & 0.07 & $<$ 2.2e-16 *** &  &  & \\
+\hspace{1em}Bus (intercept) & 1.32 & 0.04 & $<$ 2.2e-16 *** &  &  & \\
+\hspace{1em}Subway (intercept) & 1.58 & 0.04 & $<$ 2.2e-16 *** &  &  & \\
+\hspace{1em}Taxi (intercept) & -4.39 & 0.16 & $<$ 2.2e-16 *** &  &  & \\
+\hspace{1em}Female$\times$AM & -0.51 & 0.04 & $<$ 2.2e-16 *** & -0.14 & 0 & $<$ 2.2e-16 ***\\
+\hspace{1em}Male$\times$AM & -0.45 & 0.05 & $<$ 2.2e-16 *** & -0.14 & 0.01 & $<$ 2.2e-16 ***\\
+\hspace{1em}Female$\times$Midday & -0.16 & 0.02 & $<$ 2.2e-16 *** & -0.15 & 0 & $<$ 2.2e-16 ***\\
+\hspace{1em}Male$\times$Midday & -0.19 & 0.02 & $<$ 2.2e-16 *** & -0.16 & 0 & $<$ 2.2e-16 ***\\
+\hspace{1em}Female$\times$Night & -0.06 & 0.02 & 2.0e-05 *** & -0.12 & 0 & $<$ 2.2e-16 ***\\
+\hspace{1em}Male$\times$Night & -0.1 & 0.02 & 2.6e-07 *** & -0.12 & 0 & $<$ 2.2e-16 ***\\
+\hspace{1em}Female$\times$PM & -0.17 & 0.02 & 2.8e-14 *** & -0.15 & 0 & $<$ 2.2e-16 ***\\
+\hspace{1em}Male$\times$PM & -0.14 & 0.02 & 8.9e-11 *** & -0.14 & 0 & $<$ 2.2e-16 ***\\
+Rail (intercept) & 1.54 & 0.07 & $<$ 2.2e-16 *** &  &  & \\
+Bus (intercept) & 1.48 & 0.04 & $<$ 2.2e-16 *** &  &  & \\
+Subway (intercept) & 1.75 & 0.05 & $<$ 2.2e-16 *** &  &  & \\
+Taxi (intercept) & -4.47 & 0.17 & $<$ 2.2e-16 *** &  &  & \\
+$<$ 25,000$\times$16-20 & -0.66 & 0.37 & 7.0e-02 & -0.06 & 0.01 & 1.6e-09 ***\\
+25,000-49,999$\times$16-20 & -0.77 & 0.3 & 9.2e-03 ** & -0.1 & 0.02 & 3.2e-10 ***\\
+50,000-74,999$\times$16-20 & -0.9 & 0.41 & 2.7e-02 * & -0.1 & 0.02 & 1.4e-09 ***\\
+75,000-99,999$\times$16-20 & -0.62 & 0.24 & 1.0e-02 * & -0.08 & 0.01 & 3.8e-10 ***\\
+100,000-149,999$\times$16-20 & -0.08 & 0.13 & 5.0e-01 & -0.1 & 0.01 & 9.5e-12 ***\\
+$\geq$ 150,000$\times$16-20 & -0.41 & 0.14 & 5.0e-03 ** & -0.19 & 0.03 & 1.5e-11 ***\\
+$<$ 25,000$\times$20-29 & -0.04 & 0.05 & 4.2e-01 & -0.08 & 0.01 & $<$ 2.2e-16 ***\\
+25,000-49,999$\times$20-29 & 0.01 & 0.03 & 5.8e-01 & -0.09 & 0.01 & $<$ 2.2e-16 ***\\
+50,000-74,999$\times$20-29 & -0.08 & 0.05 & 1.2e-01 & -0.11 & 0.01 & $<$ 2.2e-16 ***\\
+75,000-99,999$\times$20-29 & -0.1 & 0.06 & 1.1e-01 & -0.09 & 0.01 & $<$ 2.2e-16 ***\\
+100,000-149,999$\times$20-29 & -0.21 & 0.06 & 1.5e-03 ** & -0.15 & 0.01 & $<$ 2.2e-16 ***\\
+$\geq$ 150,000$\times$20-29 & -0.08 & 0.04 & 4.3e-02 * & -0.12 & 0.01 & $<$ 2.2e-16 ***\\
+$<$ 25,000$\times$30-39 & -0.56 & 0.15 & 2.0e-04 *** & -0.09 & 0.01 & $<$ 2.2e-16 ***\\
+25,000-49,999$\times$30-39 & -0.28 & 0.09 & 1.9e-03 ** & -0.16 & 0.01 & $<$ 2.2e-16 ***\\
+50,000-74,999$\times$30-39 & -0.1 & 0.04 & 9.1e-03 ** & -0.15 & 0.01 & $<$ 2.2e-16 ***\\
+75,000-99,999$\times$30-39 & -0.4 & 0.1 & 2.3e-05 *** & -0.16 & 0.01 & $<$ 2.2e-16 ***\\
+100,000-149,999$\times$30-39 & -0.24 & 0.05 & 4.8e-06 *** & -0.17 & 0.01 & $<$ 2.2e-16 ***\\
+$\geq$ 150,000$\times$30-39 & -0.26 & 0.05 & 1.3e-08 *** & -0.18 & 0.01 & $<$ 2.2e-16 ***\\
+$<$ 25,000$\times$40-49 & -0.42 & 0.09 & 3.4e-06 *** & -0.09 & 0.01 & $<$ 2.2e-16 ***\\
+25,000-49,999$\times$40-49 & -0.32 & 0.08 & 5.1e-05 *** & -0.14 & 0.01 & $<$ 2.2e-16 ***\\
+50,000-74,999$\times$40-49 & -0.26 & 0.06 & 4.1e-06 *** & -0.17 & 0.01 & $<$ 2.2e-16 ***\\
+75,000-99,999$\times$40-49 & -0.22 & 0.05 & 7.4e-07 *** & -0.19 & 0.01 & $<$ 2.2e-16 ***\\
+100,000-149,999$\times$40-49 & -0.31 & 0.05 & 6.7e-09 *** & -0.2 & 0.01 & $<$ 2.2e-16 ***\\
+$\geq$ 150,000$\times$40-49 & -0.15 & 0.02 & 7.4e-14 *** & -0.22 & 0.01 & $<$ 2.2e-16 ***\\
+$<$ 25,000$\times$50-59 & -0.17 & 0.06 & 4.3e-03 ** & -0.1 & 0 & $<$ 2.2e-16 ***\\
+25,000-49,999$\times$50-59 & -0.31 & 0.07 & 1.3e-05 *** & -0.16 & 0.01 & $<$ 2.2e-16 ***\\
+50,000-74,999$\times$50-59 & -0.21 & 0.05 & 4.1e-05 *** & -0.17 & 0.01 & $<$ 2.2e-16 ***\\
+75,000-99,999$\times$50-59 & -0.43 & 0.07 & 1.3e-10 *** & -0.21 & 0.01 & $<$ 2.2e-16 ***\\
+100,000-149,999$\times$50-59 & -0.18 & 0.03 & 5.8e-12 *** & -0.19 & 0.01 & $<$ 2.2e-16 ***\\
+$\geq$ 150,000$\times$50-59 & -0.12 & 0.02 & 2.7e-10 *** & -0.18 & 0.01 & $<$ 2.2e-16 ***\\
+$<$ 25,000$\times$60-69 & -0.02 & 0.04 & 5.5e-01 & -0.09 & 0.01 & $<$ 2.2e-16 ***\\
+25,000-49,999$\times$60-69 & -0.36 & 0.1 & 4.9e-04 *** & -0.17 & 0.01 & $<$ 2.2e-16 ***\\
+50,000-74,999$\times$60-69 & -0.39 & 0.09 & 1.9e-05 *** & -0.16 & 0.01 & $<$ 2.2e-16 ***\\
+75,000-99,999$\times$60-69 & -0.33 & 0.07 & 4.1e-06 *** & -0.21 & 0.01 & $<$ 2.2e-16 ***\\
+100,000-149,999$\times$60-69 & -0.24 & 0.05 & 1.8e-06 *** & -0.19 & 0.01 & $<$ 2.2e-16 ***\\
+$\geq$ 150,000$\times$60-69 & -0.14 & 0.03 & 9.2e-07 *** & -0.19 & 0.01 & $<$ 2.2e-16 ***\\
+$<$ 25,000$\times$$\geq$ 70 & -0.56 & 0.15 & 2.1e-04 *** & -0.13 & 0.01 & $<$ 2.2e-16 ***\\
+25,000-49,999$\times$$\geq$ 70 & -0.33 & 0.11 & 2.6e-03 ** & -0.21 & 0.02 & $<$ 2.2e-16 ***\\
+50,000-74,999$\times$$\geq$ 70 & -0.48 & 0.12 & 8.3e-05 *** & -0.25 & 0.03 & $<$ 2.2e-16 ***\\
+75,000-99,999$\times$$\geq$ 70 & -0.27 & 0.1 & 6.3e-03 ** & -0.19 & 0.02 & $<$ 2.2e-16 ***\\
+100,000-149,999$\times$$\geq$ 70 & -0.05 & 0.07 & 4.9e-01 & -0.18 & 0.02 & 6.9e-15 ***\\
+$\geq$ 150,000$\times$$\geq$ 70 & -1.22 & 0.4 & 2.2e-03 ** & -0.15 & 0.02 & 6.0e-12 ***\\
+Rail (intercept) & 1.61 & 0.07 & $<$ 2.2e-16 *** &  &  & \\
+Bus (intercept) & 1.83 & 0.05 & $<$ 2.2e-16 *** &  &  & \\
+Subway (intercept) & 1.88 & 0.05 & $<$ 2.2e-16 *** &  &  & \\
+Taxi (intercept) & -4.37 & 0.21 & $<$ 2.2e-16 *** &  &  & \\
+$<$ 25,000$\times$$<$ 0.5 & -0.44 & 0.18 & 1.5e-02 * & -0.14 & 0.02 & 1.5e-14 ***\\
+25,000-49,999$\times$$<$ 0.5 & -0.4 & 0.16 & 1.2e-02 * & -0.27 & 0.03 & $<$ 2.2e-16 ***\\
+50,000-74,999$\times$$<$ 0.5 & -0.03 & 0.08 & 7.2e-01 & -0.28 & 0.02 & $<$ 2.2e-16 ***\\
+75,000-99,999$\times$$<$ 0.5 & -1.05 & 0.22 & 2.4e-06 *** & -0.32 & 0.04 & 1.3e-12 ***\\
+100,000-149,999$\times$$<$ 0.5 & -1.02 & 0.19 & 4.2e-08 *** & -0.31 & 0.03 & $<$ 2.2e-16 ***\\
+$\geq$ 150,000$\times$$<$ 0.5 & -0.68 & 0.15 & 2.9e-06 *** & -0.31 & 0.03 & $<$ 2.2e-16 ***\\
+$<$ 25,000$\times$0.5-1 & -0.52 & 0.13 & 5.1e-05 *** & -0.1 & 0.01 & $<$ 2.2e-16 ***\\
+25,000-49,999$\times$0.5-1 & -0.31 & 0.1 & 1.8e-03 ** & -0.21 & 0.01 & $<$ 2.2e-16 ***\\
+50,000-74,999$\times$0.5-1 & -0.39 & 0.1 & 2.0e-04 *** & -0.23 & 0.01 & $<$ 2.2e-16 ***\\
+75,000-99,999$\times$0.5-1 & -0.81 & 0.17 & 1.7e-06 *** & -0.25 & 0.02 & $<$ 2.2e-16 ***\\
+100,000-149,999$\times$0.5-1 & -0.61 & 0.11 & 8.1e-08 *** & -0.27 & 0.02 & $<$ 2.2e-16 ***\\
+$\geq$ 150,000$\times$0.5-1 & -0.31 & 0.06 & 8.7e-08 *** & -0.26 & 0.01 & $<$ 2.2e-16 ***\\
+$<$ 25,000$\times$1-2 & -0.11 & 0.06 & 6.8e-02 & -0.11 & 0 & $<$ 2.2e-16 ***\\
+25,000-49,999$\times$1-2 & -0.67 & 0.15 & 1.4e-05 *** & -0.15 & 0.01 & $<$ 2.2e-16 ***\\
+50,000-74,999$\times$1-2 & -0.43 & 0.11 & 1.8e-04 *** & -0.18 & 0.01 & $<$ 2.2e-16 ***\\
+75,000-99,999$\times$1-2 & -0.19 & 0.05 & 1.1e-04 *** & -0.19 & 0.01 & $<$ 2.2e-16 ***\\
+100,000-149,999$\times$1-2 & -0.23 & 0.05 & 2.7e-06 *** & -0.21 & 0.01 & $<$ 2.2e-16 ***\\
+$\geq$ 150,000$\times$1-2 & -0.29 & 0.05 & 4.8e-08 *** & -0.2 & 0.01 & $<$ 2.2e-16 ***\\
+$<$ 25,000$\times$2-4 & -0.41 & 0.13 & 1.2e-03 ** & -0.09 & 0 & $<$ 2.2e-16 ***\\
+25,000-49,999$\times$2-4 & -0.17 & 0.06 & 4.4e-03 ** & -0.13 & 0.01 & $<$ 2.2e-16 ***\\
+50,000-74,999$\times$2-4 & -0.23 & 0.06 & 2.9e-04 *** & -0.13 & 0.01 & $<$ 2.2e-16 ***\\
+75,000-99,999$\times$2-4 & -0.2 & 0.05 & 1.6e-04 *** & -0.15 & 0.01 & $<$ 2.2e-16 ***\\
+100,000-149,999$\times$2-4 & -0.34 & 0.07 & 3.6e-06 *** & -0.16 & 0.01 & $<$ 2.2e-16 ***\\
+$\geq$ 150,000$\times$2-4 & -0.18 & 0.04 & 1.7e-06 *** & -0.16 & 0.01 & $<$ 2.2e-16 ***\\
+$<$ 25,000$\times$4-8 & -0.57 & 0.13 & 1.2e-05 *** & -0.12 & 0.01 & $<$ 2.2e-16 ***\\
+25,000-49,999$\times$4-8 & -0.07 & 0.03 & 3.3e-02 * & -0.11 & 0.01 & $<$ 2.2e-16 ***\\
+50,000-74,999$\times$4-8 & -0.15 & 0.03 & 7.9e-06 *** & -0.16 & 0.01 & $<$ 2.2e-16 ***\\
+75,000-99,999$\times$4-8 & -0.11 & 0.03 & 6.8e-04 *** & -0.12 & 0.01 & $<$ 2.2e-16 ***\\
+100,000-149,999$\times$4-8 & -0.13 & 0.03 & 6.0e-07 *** & -0.15 & 0.01 & $<$ 2.2e-16 ***\\
+$\geq$ 150,000$\times$4-8 & -0.14 & 0.02 & 1.4e-08 *** & -0.16 & 0.01 & $<$ 2.2e-16 ***\\
+$<$ 25,000$\times$8-12 & -0.13 & 0.11 & 2.2e-01 & -0.1 & 0.02 & 1.6e-07 ***\\
+25,000-49,999$\times$8-12 & -0.06 & 0.04 & 2.1e-01 & -0.12 & 0.02 & 7.2e-09 ***\\
+50,000-74,999$\times$8-12 & -0.02 & 0.03 & 4.5e-01 & -0.09 & 0.01 & $<$ 2.2e-16 ***\\
+75,000-99,999$\times$8-12 & -0.16 & 0.09 & 5.5e-02 & -0.16 & 0.03 & 2.8e-10 ***\\
+100,000-149,999$\times$8-12 & -0.04 & 0.02 & 4.4e-02 * & -0.13 & 0.01 & $<$ 2.2e-16 ***\\
+$\geq$ 150,000$\times$8-12 & -0.01 & 0.01 & 3.3e-01 & -0.11 & 0.01 & $<$ 2.2e-16 ***\\
+$<$ 25,000$\times$$\geq$ 12 & 0.05 & 0.02 & 6.9e-03 ** & -0.06 & 0.02 & 1.7e-04 ***\\
+25,000-49,999$\times$$\geq$ 12 & -0.85 & 1.26 & 5.0e-01 & -0.57 & 0.63 & 3.7e-01\\
+50,000-74,999$\times$$\geq$ 12 & -0.32 & 0.19 & 9.9e-02 & -0.47 & 0.22 & 3.7e-02 *\\
+75,000-99,999$\times$$\geq$ 12 & -0.02 & 0.04 & 6.2e-01 & -0.08 & 0.02 & 3.1e-07 ***\\
+100,000-149,999$\times$$\geq$ 12 & -0.01 & 0.02 & 7.5e-01 & -0.09 & 0.02 & 1.9e-08 ***\\
+$\geq$ 150,000$\times$$\geq$ 12 & -0.01 & 0.02 & 6.8e-01 & -0.11 & 0.02 & 9.7e-09 ***\\
+Rail (intercept) & 1.59 & 0.07 & $<$ 2.2e-16 *** &  &  & \\
+Bus (intercept) & 1.6 & 0.05 & $<$ 2.2e-16 *** &  &  & \\
+Subway (intercept) & 1.8 & 0.05 & $<$ 2.2e-16 *** &  &  & \\
+Taxi (intercept) & -4.6 & 0.17 & $<$ 2.2e-16 *** &  &  & \\
+$<$ 25,000$\times$Other & -0.9 & 0.27 & 8.3e-04 *** & -0.15 & 0.02 & $<$ 2.2e-16 ***\\
+25,000-49,999$\times$Other & -1.42 & 0.46 & 2.3e-03 ** & -0.34 & 0.05 & 1.0e-11 ***\\
+50,000-74,999$\times$Other & -0.56 & 0.13 & 3.6e-05 *** & -0.31 & 0.03 & $<$ 2.2e-16 ***\\
+75,000-99,999$\times$Other & -1 & 0.19 & 1.2e-07 *** & -0.28 & 0.03 & $<$ 2.2e-16 ***\\
+100,000-149,999$\times$Other & -0.51 & 0.09 & 2.1e-08 *** & -0.35 & 0.03 & $<$ 2.2e-16 ***\\
+$\geq$ 150,000$\times$Other & -0.25 & 0.05 & 4.9e-08 *** & -0.3 & 0.02 & $<$ 2.2e-16 ***\\
+$<$ 25,000$\times$Recreation & -0.73 & 0.1 & 8.9e-13 *** & -0.1 & 0.01 & $<$ 2.2e-16 ***\\
+25,000-49,999$\times$Recreation & -0.22 & 0.09 & 1.9e-02 * & -0.15 & 0.01 & $<$ 2.2e-16 ***\\
+50,000-74,999$\times$Recreation & -0.21 & 0.06 & 1.9e-04 *** & -0.19 & 0.01 & $<$ 2.2e-16 ***\\
+75,000-99,999$\times$Recreation & -0.2 & 0.05 & 1.7e-04 *** & -0.19 & 0.01 & $<$ 2.2e-16 ***\\
+100,000-149,999$\times$Recreation & -0.23 & 0.04 & 2.2e-08 *** & -0.22 & 0.02 & $<$ 2.2e-16 ***\\
+$\geq$ 150,000$\times$Recreation & -0.14 & 0.03 & 2.9e-08 *** & -0.22 & 0.01 & $<$ 2.2e-16 ***\\
+$<$ 25,000$\times$Shopping/errands & -0.08 & 0.04 & 1.7e-02 * & -0.1 & 0 & $<$ 2.2e-16 ***\\
+25,000-49,999$\times$Shopping/errands & -0.58 & 0.1 & 4.8e-09 *** & -0.2 & 0.01 & $<$ 2.2e-16 ***\\
+50,000-74,999$\times$Shopping/errands & -0.37 & 0.06 & 6.1e-09 *** & -0.21 & 0.01 & $<$ 2.2e-16 ***\\
+75,000-99,999$\times$Shopping/errands & -0.36 & 0.07 & 1.3e-07 *** & -0.25 & 0.01 & $<$ 2.2e-16 ***\\
+100,000-149,999$\times$Shopping/errands & -0.26 & 0.04 & 1.7e-12 *** & -0.24 & 0.01 & $<$ 2.2e-16 ***\\
+$\geq$ 150,000$\times$Shopping/errands & -0.33 & 0.04 & $<$ 2.2e-16 *** & -0.24 & 0.01 & $<$ 2.2e-16 ***\\
+$<$ 25,000$\times$Work/school & -0.14 & 0.05 & 9.6e-03 ** & -0.09 & 0.01 & $<$ 2.2e-16 ***\\
+25,000-49,999$\times$Work/school & -0.09 & 0.03 & 5.6e-03 ** & -0.12 & 0 & $<$ 2.2e-16 ***\\
+50,000-74,999$\times$Work/school & -0.11 & 0.03 & 6.0e-05 *** & -0.12 & 0 & $<$ 2.2e-16 ***\\
+75,000-99,999$\times$Work/school & -0.2 & 0.03 & 8.6e-09 *** & -0.13 & 0 & $<$ 2.2e-16 ***\\
+100,000-149,999$\times$Work/school & -0.14 & 0.02 & 2.2e-10 *** & -0.15 & 0 & $<$ 2.2e-16 ***\\
+$\geq$ 150,000$\times$Work/school & -0.07 & 0.01 & 4.1e-08 *** & -0.14 & 0 & $<$ 2.2e-16 ***\\
+Rail (intercept) & 1.46 & 0.07 & $<$ 2.2e-16 *** &  &  & \\
+Bus (intercept) & 1.43 & 0.04 & $<$ 2.2e-16 *** &  &  & \\
+Subway (intercept) & 1.65 & 0.05 & $<$ 2.2e-16 *** &  &  & \\
+Taxi (intercept) & -4.57 & 0.17 & $<$ 2.2e-16 *** &  &  & \\
+$<$ 25,000$\times$AM & -0.36 & 0.12 & 2.3e-03 ** & -0.09 & 0.01 & $<$ 2.2e-16 ***\\
+25,000-49,999$\times$AM & -0.96 & 0.13 & 9.4e-13 *** & -0.14 & 0.01 & $<$ 2.2e-16 ***\\
+50,000-74,999$\times$AM & -0.35 & 0.08 & 2.1e-05 *** & -0.13 & 0.01 & $<$ 2.2e-16 ***\\
+75,000-99,999$\times$AM & -0.69 & 0.1 & 1.0e-12 *** & -0.16 & 0.01 & $<$ 2.2e-16 ***\\
+100,000-149,999$\times$AM & -0.53 & 0.07 & 4.9e-15 *** & -0.16 & 0.01 & $<$ 2.2e-16 ***\\
+$\geq$ 150,000$\times$AM & -0.41 & 0.06 & 6.3e-12 *** & -0.17 & 0.01 & $<$ 2.2e-16 ***\\
+$<$ 25,000$\times$Midday & -0.18 & 0.04 & 4.0e-05 *** & -0.09 & 0 & $<$ 2.2e-16 ***\\
+25,000-49,999$\times$Midday & -0.28 & 0.05 & 3.6e-08 *** & -0.16 & 0.01 & $<$ 2.2e-16 ***\\
+50,000-74,999$\times$Midday & -0.19 & 0.03 & 9.0e-09 *** & -0.18 & 0.01 & $<$ 2.2e-16 ***\\
+75,000-99,999$\times$Midday & -0.21 & 0.03 & 8.6e-10 *** & -0.2 & 0.01 & $<$ 2.2e-16 ***\\
+100,000-149,999$\times$Midday & -0.27 & 0.03 & 2.4e-15 *** & -0.22 & 0.01 & $<$ 2.2e-16 ***\\
+$\geq$ 150,000$\times$Midday & -0.19 & 0.02 & 6.7e-16 *** & -0.21 & 0.01 & $<$ 2.2e-16 ***\\
+$<$ 25,000$\times$Night & -0.14 & 0.07 & 4.6e-02 * & -0.09 & 0.01 & $<$ 2.2e-16 ***\\
+25,000-49,999$\times$Night & -0.03 & 0.02 & 2.0e-01 & -0.11 & 0.01 & $<$ 2.2e-16 ***\\
+50,000-74,999$\times$Night & -0.12 & 0.04 & 8.9e-03 ** & -0.12 & 0.01 & $<$ 2.2e-16 ***\\
+75,000-99,999$\times$Night & -0.18 & 0.05 & 5.5e-04 *** & -0.13 & 0.01 & $<$ 2.2e-16 ***\\
+100,000-149,999$\times$Night & -0.07 & 0.02 & 2.5e-03 ** & -0.13 & 0.01 & $<$ 2.2e-16 ***\\
+$\geq$ 150,000$\times$Night & -0.09 & 0.02 & 8.5e-06 *** & -0.15 & 0.01 & $<$ 2.2e-16 ***\\
+$<$ 25,000$\times$PM & -0.27 & 0.08 & 7.3e-04 *** & -0.1 & 0.01 & $<$ 2.2e-16 ***\\
+25,000-49,999$\times$PM & -0.44 & 0.09 & 1.2e-06 *** & -0.14 & 0.01 & $<$ 2.2e-16 ***\\
+50,000-74,999$\times$PM & -0.32 & 0.07 & 1.1e-06 *** & -0.16 & 0.01 & $<$ 2.2e-16 ***\\
+75,000-99,999$\times$PM & -0.42 & 0.06 & 8.7e-11 *** & -0.15 & 0.01 & $<$ 2.2e-16 ***\\
+100,000-149,999$\times$PM & -0.16 & 0.03 & 1.5e-08 *** & -0.18 & 0.01 & $<$ 2.2e-16 ***\\
+$\geq$ 150,000$\times$PM & -0.09 & 0.02 & 2.5e-07 *** & -0.17 & 0.01 & $<$ 2.2e-16 ***\\
+Rail (intercept) & 1.44 & 0.07 & $<$ 2.2e-16 *** &  &  & \\
+Bus (intercept) & 1.49 & 0.04 & $<$ 2.2e-16 *** &  &  & \\
+Subway (intercept) & 1.69 & 0.04 & $<$ 2.2e-16 *** &  &  & \\
+Taxi (intercept) & -4.65 & 0.17 & $<$ 2.2e-16 *** &  &  & \\
+Other$\times$AM & -0.26 & 0.05 & 6.0e-08 *** & -0.28 & 0.02 & $<$ 2.2e-16 ***\\
+Recreation$\times$AM & -0.63 & 0.16 & 1.1e-04 *** & -0.15 & 0.01 & $<$ 2.2e-16 ***\\
+Shopping/errands$\times$AM & -0.36 & 0.1 & 2.4e-04 *** & -0.17 & 0.01 & $<$ 2.2e-16 ***\\
+Work/school$\times$AM & -0.4 & 0.04 & $<$ 2.2e-16 *** & -0.11 & 0 & $<$ 2.2e-16 ***\\
+Other$\times$Midday & -0.39 & 0.07 & 1.4e-07 *** & -0.27 & 0.02 & $<$ 2.2e-16 ***\\
+Recreation$\times$Midday & -0.31 & 0.05 & 6.3e-12 *** & -0.16 & 0.01 & $<$ 2.2e-16 ***\\
+Shopping/errands$\times$Midday & -0.23 & 0.03 & $<$ 2.2e-16 *** & -0.16 & 0 & $<$ 2.2e-16 ***\\
+Work/school$\times$Midday & -0.09 & 0.01 & 2.7e-11 *** & -0.15 & 0 & $<$ 2.2e-16 ***\\
+Other$\times$Night & -0.27 & 0.09 & 2.3e-03 ** & -0.23 & 0.02 & $<$ 2.2e-16 ***\\
+Recreation$\times$Night & -0.09 & 0.02 & 4.0e-07 *** & -0.16 & 0.01 & $<$ 2.2e-16 ***\\
+Shopping/errands$\times$Night & -0.12 & 0.03 & 2.8e-04 *** & -0.15 & 0.01 & $<$ 2.2e-16 ***\\
+Work/school$\times$Night & -0.04 & 0.02 & 2.6e-02 * & -0.09 & 0 & $<$ 2.2e-16 ***\\
+Other$\times$PM & -0.89 & 0.15 & 2.6e-09 *** & -0.33 & 0.03 & $<$ 2.2e-16 ***\\
+Recreation$\times$PM & -0.7 & 0.1 & 5.7e-12 *** & -0.15 & 0.01 & $<$ 2.2e-16 ***\\
+Shopping/errands$\times$PM & -0.22 & 0.04 & 2.8e-08 *** & -0.18 & 0.01 & $<$ 2.2e-16 ***\\
+Work/school$\times$PM & -0.07 & 0.01 & 3.2e-07 *** & -0.13 & 0 & $<$ 2.2e-16 ***\\*
+\end{longtable}
+\endgroup{} \end{document}
