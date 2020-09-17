@@ -1,0 +1,603 @@
+%
+% Transportation Research Board conference paper template
+% version 3.1 Lite
+%
+% When numbered option is activated, lines are numbered.
+\documentclass[numbered]{trbunofficial}
+
+\usepackage{booktabs}
+\usepackage{subcaption}
+\usepackage{graphicx}
+\usepackage{nameref}
+\usepackage{float}
+\usepackage{nccmath}
+\usepackage{numprint}
+\usepackage{longtable}
+\npthousandsep{,}
+%\RequirePackage[group-separator={,}]{siunitx}
+%\usepackage{tracefnt}
+
+% \usepackage[colorlinks=true,linkcolor=blue,citecolor=blue]{hyperref}
+% For TRB version hide links
+\usepackage[hidelinks]{hyperref}
+
+% \newcommand{\quickwordcount}[1]{%
+%   \immediate\write18{texcount -1 -sum -merge -q #1.tex output.bbl > #1-words.sum }%
+%   \input{#1-words.sum} words%
+% }
+
+% Put here what will go to headers as author
+\AuthorHeaders{Fournier and Christofa}
+  \title{On the impact of income, age, and travel distance on the value of time}
+
+%AUTHOR
+\author{%
+  \textbf{Nicholas Fournier, Ph.D.}\\
+  nick.fournier@berkeley.edu\\
+  University of California, Berkeley\\
+  409 McLaughlin Hall, Berkeley, CA 94720\\
+  \hfill\break% this is a way to add line numbering on empty line
+  \textbf{Eleni Christofa, Ph.D.}\\
+  christofa@ecs.umass.edu\\
+  University of Massachusetts Amherst\\
+  130 Natural Resources Road, Amherst, MA 01003, USA
+}
+
+% If necessary modify the number of words per table or figure default is set to
+% 250 words per table and figure
+\WordsPerTable{250}
+\WordsPerFigure{0}
+
+% If words are counted manually, put that number here. This does not include
+% figures and tables. This can also be used to avoid problems with texcount
+% program i.e. if one does not have it installed.
+%\TotalWords{200}
+
+\begin{document}
+%\SweaveOpts{concordance=TRUE}
+
+<<setup, include=FALSE, cache=FALSE>>=
+    library(knitr)
+    library(ggplot2)
+    library(data.table)
+    library(stringr)
+    
+    # set global chunk options
+    knitr::opts_chunk$set(cache=TRUE)
+    
+    #Load data
+    load("./localdata/dat_models.RData")
+    load("./localdata/dat_votgrid.RData")
+    load("./localdata/dat_tables.RData")
+    
+    #page width
+    tscale = 6.5
+@
+
+%TC:ignore 
+\maketitle
+%TC:endignore 
+
+\section{Abstract}
+The value of time (VOT) is a fundamental component used in transportation modeling, policy analysis, and economic appraisal. Decades of research and practice have empirically estimated the VOT across many factors (e.g., mode, purpose, time, comfort, etc.), yet little is known about its underlying form. While it is well established that VOT can vary, it is still unclear whether patterns exist in this variation. The objective of this paper is not to merely estimate the VOT, but to model the VOT across multiple continuous, and interacting variables. The purpose is to reveal its functional form with respect to mode, age, gender, purpose, income, and time of day to provide a generalizable understanding for future research and practice. Such an understanding can help develop simpler models and reduce the need for bespoke estimations for every conceivable variable perturbation. This research utilized a household travel survey containing \numprint{\Sexpr{length(unique(mnldt[,TRIPID]))}} reported trips with imputed travel time and costs for the alternative mode choices. The average overall estimated VOT is \Sexpr{round(votavg[['VOT']][1],2)} $\sfrac{\$}{hr}$, with results showing VOT varying log-linearly with income and trip distance, but following a Gaussian function (normal curve) with age. Overall, the results show that travel distance dominates VOT variation, which increases exponentially at a rate that is \Sexpr{round(coef(fit_dist)[2]/(10000*coef(fit_inc)[2]),2)} times higher per mile of distance than per \$10,000 of income, and that VOT by age peaks at age \Sexpr{round(votgrid[which.max(AGE.VOT),AGE],0)}. This basic understanding of \emph{how} the VOT varies sets the foundation for answering the subsequent question for \emph{why} it might vary? 
+
+\hfill\break%
+\noindent\textit{Keywords}: value of time, value of time functional form, revealed preference, household travel survey
+\newpage
+
+\section{Introduction}
+The value of time (VOT) is an economic measure defined as the opportunity cost of travel, less the utility provided by the time spent traveling. In other words, it is the monetary value per unit time spent traveling (e.g., $\sfrac{\$}{hour}$). It is an important measure that has been used for decades in transport modeling, policy analysis (e.g., project cost benefit analysis, social cost analysis, pricing, etc.), and to shed insight into human behavior through an economic perspective. Providing an accurate VOT estimate is absolutely paramount, because inaccurate values can yield seriously flawed analysis results; which in the case of policy development can have serious social or economic consequences. This concern is heightened by the fact that the VOT can be volatile and subject to a high degree of variation due to a multitude of factors, such as local population, income, travel mode, trip purpose, reliability, comfort, trip distance, etc. For this reason, a plethora of research and empirical studies have been conducted to provide precise and bespoke VOT estimates that are unique to individual projects. 
+
+Abundant literature and a vast body of unpublished empirical estimations of VOT performed by practitioners (e.g., for travel demand modeling and cost benefit analyses) exists. However, there is a lack of generalized exploratory analysis on the VOT to investigate whether any patterns exist that can be exploited in future efforts. More specifically, there are many studies that report the VOT estimated \emph{across} many variables, but few studies look at VOT variation \emph{within} variables. For example, income has been frequently cited as having a log-linear relationship with the VOT \citep{Athira2016,Borjesson2012,Steimetz2005,Kouwenhoven2014}, but few other continuous variables (e.g., age and distance) have been investigated with regard to their functional relationship with VOT.
+
+This paper explores how the VOT varies across several useful explanatory variables, both discrete and continuous. Discrete variables include mode, purpose, time of day, and gender; continuous variables include age, income, and travel distance. To explore the continuous variables, they are discretely segmented and estimated as an interaction term in the estimation to allow the variables. The resulting values can then be fitted to an appropriate parametric model. Although the results are limited to data from Massachusetts, USA, the VOT is fitted to basic parametric functions (e.g., log-linear and Gaussian), which can be easily exploited in models for future research and practice. 
+
+Although the VOT can vary due to a plethora of difficult to account for behavioral, psychological, and environmental factors, there may be some predictable patterns that exist. The objective of this research is not to provide an improved model or methodology for VOT estimation, but to explore whether any patterns exist in the VOT as it varies across, and between, commonly used modeling variables of income, age, time of day, trip purpose, and trip distance. The purpose of this exploration is to provide a better understanding of VOT variation and its form in order to help better inform research and practice in both the estimation and formulation of transportation models. For example, a model which relies on a simple average value of time may grossly over or underestimate the economic cost of delay in specific sectors of the economy or segments of the population.
+
+The remainder of the paper is organized as follows: First a brief literature review on the VOT is presented, followed by a description of the methodology and data. A summary of results is presented next, followed by a discussion of findings and the conclusions. 
+
+
+\section{Literature Review}\label{sec:litreview}
+
+The VOT is in itself a quantification of an abstraction. It is the value, measured either in utility or monetarily, that a person holds for a particular increment of time given some activity or purpose. VOT is something long understood in the realm of labor and work as the value extracted from time spent working. However, outside of wages and productivity, it is also a concept that has become of particular importance in the field of transportation. That is, how much value (e.g., monetary value) does a person associate with time spent traveling in addition to the actual monetary cost? This concept enables researchers and practitioners to convert travel time from the abstract realm of pure utility into real-world monetary value.
+
+\citet{Becker1965}, \citet{Beesley1965}, and \citet{Johnson1966} were among the first to provide a theoretical formulation for the VOT in transportation. Becker's theory of time and money assumed that an individual optimizes their exchange between leisure and work time. Meaning that time spent traveling to work is essentially unearned income; thus, their VOT can be derived as the marginal between travel time and money, i.e. the person's after-tax wage rate. This was then expanded upon with random utility theory, formulating a utility function affected by the goods consumed and spent by individuals, extracting a VOT when estimating utility \citep{DeSerpa1971,Evans1972,Hensher1976}. More recently with the advancement of computation and the proliferation of discrete choice models, VOT is frequently extracted from the estimated coefficients for cost and time in probabilistic choice models \citep{McFadden1981,Ben-Akiva1997,Hensher2001,Train2009}. From this basis, a plethora of empirical studies have been conducted to study and measure the many possible time valuation factors and methodological estimation improvements \citep{Steimetz2005,DeBorger2008}.
+
+To date there are a number of thorough literature reviews and meta-analyses of compiled VOT estimations \citep{Wardman2001,Abrantes2011,Shires2009}. An empirical study by \citet{Abrantes2011} provides a single estimation of VOT, depending upon the various types of time spent (e.g. in vehicle time, wait time, congestion time, etc.). \citet{Small2012} provided a detailed review of the literature, noting that many studies find the VOT to be about half the gross wage rate, which is consistent with earlier findings by \citet{Lave1969}. However, it has also been shown that the VOT varies log-linearly with income and can change over time \citep{Johnson1966,Borjesson2012}. The VOT has also been found to have a tendency to increase over longer trips, suggesting travel fatigue or some time-compounding effect. This is particularly important for long-haul trips, such as air travel \citep{Merkert2017} or high-speed rail \citep{Hultkrantz2013}, but also for relatively short but fatiguing modes, such as walking and biking \citep{Wichman2017}.
+
+In general, factors affecting the VOT can be divided into two categories of personal traveler characteristics (e.g., age, income, children, employment, etc.) and trip characteristics (e.g., mode, time, cost, purpose, etc.) \citep{Borjesson2014}. This naturally aligns nicely with discrete mode choice modeling structures of ``alternative specific'' and ``individual specific'' variables. Among the trip characteristics that have been cited as accounting for the majority of trip costs are travel time and travel time reliability \citep{Small2007}; both of these have been a primary focus in the VOT literature \citep{Small2005,Uchida2014,Kouwenhoven2014}. 
+
+There are, of course, many ``soft'' factors that interact with both the trip and personal characteristics that can affect the VOT, such as comfort and crowding on transportation modes \citep{Wardman2011,Kroes2014,Kouwenhoven2018}. However, as computers miniaturize and become increasingly mobile, the ability to be productive whilst traveling has had a decreasing effect on the VOT \citep{Lyons2005,Wardman2016,Malokin2017,Kouwenhoven2018}. \citet{Jain2008} went so far as to refer travel time not as a burden, but as a `gift' in certain cases. A decreased VOT can be problematic due to the potential of estimating a positive utility (as opposed to dis-utility) as it implies that users are willing to spend more money for more time and in-effect, having negative a VOT. This can occur with leisure travel or premium services, such as holiday travel or taxis \citep{Jain2008,Jara-Diaz2008,Fezzi2014}. This positive utility (and negative VOT) can undermine, or at least complicate, the economic-based transport models and analyses where VOT is used. 
+
+In addition to a positive utility, other limitations and challenges are associated with the VOT. A methodological limitation is that a monetary VOT requires a monetary cost to be associated with the choice and its alternatives. For this reason, studies often rely on measurable monetary costs attached to travel, such as toll roads or public transport \citep{Li2012,Wardman2004}, but often focus on a single mode or ignore other factors, such as age, income, and trip distance. Focusing on a single mode often comes from the fact that these subsidized facilities and systems are generally subject to regulatory oversight and appraisal \citep{Wardman2001}. However, this can become problematic for modes with no measurable monetary travel cost, such as walking and biking \citep{Wichman2017}. 
+
+Despite the considerable amount of research conducted to date, the VOT is not fully understood as it varies across individuals, time itself, and a multitude of other factors. Continued research is necessary in this area as the VOT continues to be a fundamental component in many transport models, policy analyses, or economic appraisals.
+
+
+\section{Methodology}\label{sec:methods}
+
+The methodology is divided into three subsections: 1) A brief description of a general multinomial logit model to demonstrate the full modeling capability of the data. 2) An explanation of the methodology used to investigate and explore the VOT variation by separate variables. 3) A description of the data and data-preparation steps.
+
+\subsection{Multinomial logit model}
+A discrete choice with multiple alternatives is commonly modeled as having a stochastic probability $P_{ij}$ for alternative $j$ and individual $i$ using the multinomial logit function 
+
+\begin{equation}
+    P_{ij} = \sfrac{e^{U_{ij}}}{\sum\limits_{j=1}^J e^{U_{ij}}}
+\end{equation}
+
+\noindent where ``utility'' for individual $i$ and choice alternative $j$ $U_{ij}$ is modeled as a generalized linear model with a general form of
+
+\begin{equation}
+U_{ij} = \alpha_{ij} + \beta x_{j} + \gamma_{j} z_{i} + \delta_{j} w_{ij} + \epsilon_{ij}
+\label{eq:fullmnl}
+\end{equation}
+
+\noindent that includes three variable types:
+\begin{itemize}
+    \item alternative specific variables $x_{ij}$ with a generic coefficient $\beta$,
+    \item individual specific variables $z_i$ with alternative specific coefficients $\gamma_j$, 
+    \item and alternative specific variables $w_{ij}$ with an alternative specific coefficient $\delta_j$.
+\end{itemize}
+
+\subsection{Value of time estimation and investigation}
+
+The VOT estimation was performed in two phases, estimating coefficients for time and cost with:
+
+\begin{enumerate}[leftmargin=0.25in, topsep=3pt, itemsep=3pt, parsep=3pt]
+  \item two interaction variables simultaneously. This provides a joint VOT calculated with the joint coefficients for multivariate interactions (e.g., varying by both age and income). However, this only provides a rough low-resolution joint result and is susceptible to localized error within each stratification.
+
+  \item one interaction variable at a time. This effectively provides a VOT aggregated across dimensions. %Although indirect, the results can be parametrized by fitting a continuous function to the aggregated results that can be subsequently used to approximate a smooth continuous joint VOT.
+\end{enumerate}
+
+Although a multinomial model can be estimated using all available data in a single model, the other variables were not included because in each case the variable being studied is treated as an interaction term, creating a combinatorial matrix against the other variables in the model. Including the additional categorical variables causes the sample to become too stratified and sparse to be estimated. As a result, each variable is estimated separately in order to ensure there is sufficient data for estimation, despite the loss of prediction power.
+
+Empirical estimation of the VOT in transportation is typically achieved by comparing the utility coefficient parameters $\beta$ for time $T$ and cost $C$ as estimated in a discrete choice model, such as
+
+\begin{equation}
+U_{ij} = \alpha_{j} + \beta_{C} C_{ij} + \beta_{T} T_{ij} + \epsilon_{ij}
+\end{equation}
+
+\noindent The regression terms $\alpha$ and $\epsilon$ are for the intercept and random error, respectively. In this paper, a multinomial logit choice model was estimated using the $R$-package `mlogit' \citep{Croissant2019} for mode choice using travel time and monetary cost as alternative specific variables (i.e., varies across alternatives). The individual specific variables (i.e., do not vary across alternatives) are age, income, gender, purpose, trip distance, and trip time of day. Mode is neither since it is the choice itself, but can be treated as an individual specific variable when extracting value of time.
+
+To yield coefficients that vary due to an interaction with another variable, such as age, income, or trip distance, the model can be estimated as an interaction model. However, this can be problematic with continuous interaction variables that vary non-linearly, as it would yield a single coefficient inappropriately fitted as a linear model. This could be easily circumvented through linear transformation, but this technique requires the non-linear form to be known {\itshape a priori}. As a crude alternative solution, the continuous variable can be segmented, estimating separate coefficients for each discrete category, written as
+
+\begin{equation}
+  \label{eq:oneinteract}
+  \small
+  U_{ijq} = \alpha_{j} + \left( \beta_{Cj} C_{ijq} + \beta_{Tq} T_{ij} \right) \times \theta_{q} + \epsilon_{ijq}
+\end{equation}
+
+\noindent where the interaction term $\theta_q$ is the categorical dissection variable introduced to yield a pair of cost and time coefficients for each level $q \in Q$ (e.g., a separate pair of $\beta_C$ and $\beta_T$ is estimated for each level $q$ of income).  The discretized continuous variables can then be re-associated to the correct scale using a bench-marked position (e.g., mean or median bin value) for further analysis. Although discretizing continuous variables is less than ideal for the estimated model's predictive power, the purpose of this study is not to predict mode choice, but to analyze the VOT extracted from estimation. Discretization allows us to inspect the resulting functional form for the VOT across the study variable that would have otherwise been obscured by multi-dimensionality or machine-learned linear transformations. This ``dissection'' by discretization was repeated for each study variable, or pair of study variables, estimating a multinomial logit model in each case. 
+
+Multiple interaction variables can be introduced for multivariate interactions (e.g., both age and income). An additional interaction term $\lambda_r$ (e.g., age), for each level $r \in R$ can also be incorporated, written as
+
+\begin{equation}
+  \label{eq:twointeract}
+  \small
+  U_{ijqr} = \alpha_{j} + \left( \beta_{Cqr} C_{ij} + \beta_{Tqr} T_{ij} \right) \times \theta_{q} \times \lambda_{r} + \epsilon_{ijqr}
+\end{equation}
+
+\noindent This yields a two-way VOT matrix with a pair of $\beta_C$ and $\beta_T$ for each combination (e.g., for income $q$ and age $r$). From the set of estimated coefficients, a separate VOT can be calculated for each level $q$ and/or $r$ as\vspace{3pt}
+
+\begin{equation}
+  \small
+    VOT_{qr} = \frac{\beta_{Tqr}}{\beta_{Cqr}}
+\end{equation}
+
+To gauge the resulting error when calculating VOT, the error was calculated as the range between the minimum and maximum points resulting from plus or minus the standard error, expressed as
+
+\begin{ceqn}
+\begin{equation}\label{eq:error}
+  \small
+  \text{VOT error} = \left\{VOT_{\min}, VOT_{\max}\right\} = \left\{ \min \left(\frac{\beta_T \pm SE_T}{\beta_C \pm SE_C} \right),~ \max\left(\frac{\beta_T \pm SE_T}{\beta_C \pm SE_C} \right) \right\}
+\end{equation}
+\end{ceqn}
+\noindent where $SE$ is the standard error for time and cost. This provides a rough measure of error when calculating the VOT. 
+
+Each of the study variables were estimated independently as the interaction terms (i.e., $\theta$ and $\lambda$ in Equations~\eqref{eq:oneinteract} and~\eqref{eq:twointeract}) in separate multinomial choice models one at a time. The reason for this estimation was to avoid over fitting of the data and confounding the results due to multicollinearity. It was also done to ensure a sufficiently large sample size for each study variable model. To avoid omitting the reference category for mode during estimation, the VOT for mode choice was estimated with cost and travel time as alternative specific variables with alternative specific coefficients, not as generic alternative specific variables.
+
+\subsection{Data}\label{sec:data}
+This paper utilized three types of data, described as follows:
+
+\begin{itemize}[leftmargin=0.25in, topsep=3pt, itemsep=1pt, parsep=1pt]
+\item \emph{Massachusetts Travel Survey (MTS)}
+\item \emph{Estimated travel-time skim matrices from the Central Transportation Planning Staff's (CTPS) travel demand model}
+\item \emph{Monetary travel costs compiled from various public sources} 
+\end{itemize}
+
+\noindent The above data were then combined to construct a revealed-preference dataset for mode choice between drive, taxi, commuter rail, bus, and subway; each complete with trip specific alternative costs and travel times. The MTS data were used as the ``revealed'' choices and the alternative mode costs and travel times were imputed for each trip using the origin-destination travel time and cost matrices. These data are described in further detail in the following subsections.
+
+\subsubsection{Massachusetts Travel Survey}
+The Massachusetts Travel Survey (MTS) \citep{MTS2012} contains the reported travel activity of respondents for a day specified by the surveyors, as well as their demographics, trip purpose, and trip locations. The full dataset includes 15,040 total household samples, 37,023 individual household members, and 190,215 trip-destinations. Although the raw Massachusetts Travel Survey contains a substantial amount of data, many could not be used for estimation and the data needed to be thoroughly cleaned. Trips were removed from the dataset if:
+
+\begin{itemize}[leftmargin=0.25in, topsep=3pt, itemsep=1pt, parsep=1pt]
+  \item invalid origin or destination (e.g., non-travel activity or origin/destination outside of the skim matrices' region), or
+  \item insufficient feasible mode alternatives (e.g., no public transportation, or under driving age).
+\end{itemize}
+
+From the remaining available data, a dataset with imputed alternatives was able to be constructed for \numprint{\Sexpr{length(unique(mnldt[CHOICE==T, TRIPID]))}} reported trips from \numprint{\Sexpr{nrow(unique(mnldt[CHOICE==T, .(SAMPN,PERNO)]))}} persons and \numprint{\Sexpr{length(unique(mnldt[CHOICE==T,SAMPN]))}} household samples. The number of reported trips represents the total number of actual samples in the data, with an alternative mode choice being imputed (i.e., the hypothetical alternative not taken by the respondent) for each trip. 
+
+\subsubsection{Categorical data variables}
+The resulting dataset contained both continuous and categorical variables. The categorical variables consist of mode, trip purpose, and income. Although income is naturally continuous, it was already binned into discrete income groups in the survey data. These data are summarized in Table~\ref{tab:catdata} showing the categorical variables and frequencies $N$ within each group. The ``Other'' trip purpose, which represents the largest share of trips, includes trips when a respondent either refused to specify their trip purpose or when the trip was transport related (e.g., picking up or dropping off a passenger). 
+
+\begin{table}[!h]
+\centering
+%\renewcommand{\arraystretch}{0.8}% Tighter
+\caption{Categorical data from the Massachusetts Travel Survey}
+\label{tab:catdata}
+<<table_datasummary, results="asis", echo=FALSE>>=
+    tables[['data.summary']]
+  @
+\end{table}
+The mode variable is used as the discrete choice set, i.e., the mode chosen among possible alternatives in the data. While other research will often group public transit options (e.g., bus, express bus, subway, commuter rail, etc.) into a single transit category for practical modeling purposes (e.g., insufficient access to public transit, data balancing, etc.), an attempt was made to retain as many distinct modes as possible. The reasoning is that there are likely important differences in user preference amongst transit modes. For example, commuter rail tends to serve wealthier suburban commuters with higher VOTs, and often allow for remote laptop work which further alters VOT. It is possible further variations exist between public transit modes and is worthy of investigation. 
+
+\subsubsection{Continuous data variables}
+The MTS data also contains several continuous variables used for the analysis. These are travel cost, travel time, travel distance, age, and trip time of day. The distribution for these variables is shown in Figure~\ref{fig:contdists}. In general the travel cost, time, and distances all have a heavy-tailed distribution as expected. The histogram bins for travel time in Figure~\ref{fig:timedist} are larger than other variables (i.e., 5-minute increments) because survey respondents typically rounded their answers to the nearest 5 minutes.
+
+\begin{figure}[!h]
+  \centering
+  \begin{subfigure}[b]{0.325\textwidth}
+    <<plot_costdist, echo = FALSE, warning=FALSE, fig.width=0.33*tscale, fig.asp=0.755, dev = "cairo_pdf">>=
+    ggplot(mnldt[CHOICE==T & !(MODE %in% c("SUBWAY","LOCAL BUS")),], aes(x=COST, y=..density..*0.5)) + 
+    geom_histogram(binwidth = 0.5, alpha = 0.25, color='black') + 
+    geom_density(adjust=2, fill='#084594', alpha=0.5) + 
+    scale_x_continuous("Travel cost ($)", labels = scales::dollar, breaks = seq(0,20,by=5),
+                       limits = c(0,15), expand = c(0,0)) +
+    scale_y_continuous("Percent", labels = scales::percent_format(accuracy=1), expand = c(0,0)) +
+    theme_classic() +
+    theme(text=element_text(family="Times"))
+    
+    @
+	  \caption{\centering Travel cost distribution}
+	  \label{fig:costdist}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.325\textwidth}
+	  <<plot_timedist, echo = FALSE, warning=FALSE, fig.width=0.33*tscale, fig.asp=0.755, dev = "cairo_pdf">>=
+    ggplot(mnldt[CHOICE==T,], aes(x=TRPDUR, y=..density..*0.25)) + 
+    geom_histogram(binwidth = 5, alpha = 0.25, color='black') + 
+    geom_density(adjust=3, fill='#084594', alpha=0.5) + 
+    scale_x_continuous("Travel time (minutes)", limits = c(0,60), breaks = seq(0,90,by=10), expand = c(0,0)) +
+    scale_y_continuous("Percent", labels = scales::percent_format(accuracy=0.1), expand = c(0,0)) +
+    theme_classic() +
+    theme(text=element_text(family="Times"))
+    @
+    \caption{\centering Travel-time distribution}
+	  \label{fig:timedist}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.325\textwidth}
+    <<plot_distist, echo = FALSE, warning=FALSE, fig.width=0.33*tscale, fig.asp=0.75, dev = "cairo_pdf">>=
+    ggplot(mnldt[CHOICE==T,], aes(x=TRPDIST, y=..density..*0.5)) + 
+    geom_histogram(binwidth = 0.5, alpha = 0.25, color='black') + 
+    geom_density(adjust=1, fill='#084594', alpha=0.5) + 
+    scale_x_continuous("Travel distance (miles)", limits = c(0,15), breaks = seq(0,20,by=5), expand = c(0,0)) +
+    scale_y_continuous("Percent", labels = scales::percent_format(accuracy=1), 
+                       limits = c(0,0.175), breaks = seq(0,1,by=0.04), expand = c(0,0)) +
+    theme_classic() +
+    theme(text=element_text(family="Times"))
+    @
+    \caption{\centering Travel distance distribution}
+	  \label{fig:distdist}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.49\textwidth}
+    <<plot_agedist, echo = FALSE, warning=FALSE, fig.width=0.5*tscale, fig.asp=0.5, dev = "cairo_pdf">>=
+    ggplot(mnldt[CHOICE==T,], aes(x=AGE, y=..density..*0.5)) + 
+    geom_histogram(binwidth = 2, alpha = 0.5, color='black') + 
+    geom_density(adjust=2, fill='#084594', alpha=0.5) + 
+    scale_x_continuous("Age", limits = c(16,90), breaks = seq(10,90,by=10), expand = c(0,0)) +
+    scale_y_continuous("Percent", labels = scales::percent_format(accuracy=0.01), limits = c(0,0.0175), expand = c(0,0)) +
+    theme_classic() +
+    theme(text=element_text(family="Times"))
+    @
+  \caption{\centering Age distribution}
+  \label{fig:agedist}
+  \end{subfigure}
+    \begin{subfigure}[b]{0.49\textwidth}
+    <<plot_toddist, echo = FALSE, warning=FALSE, fig.width=0.5*tscale, fig.asp=0.5, dev = "cairo_pdf">>=
+    hours <- mnldt[CHOICE==T,.(DEP_HR,DEP_MIN)]
+    hours[DEP_HR==24, DEP_HR:=0]
+    hours[ , TIME := as.POSIXct(paste(DEP_HR,DEP_MIN,sep=":"),format='%H:%M', tz="GMT")]
+  
+    ggplot(hours, aes(x=TIME, y=..density..*60*30)) + 
+    geom_histogram(binwidth = 60*30, alpha = 0.5, color='black') +
+    geom_density(adjust=1, fill='#084594', alpha=0.5) + 
+    scale_x_datetime("Time of day", breaks=scales::date_breaks("4 hour"), labels=scales::date_format(format = "%H:%M")) +
+    scale_y_continuous("Percent", labels = scales::percent_format(accuracy = 1), expand = c(0,0)) +
+    theme_classic() +
+    theme(text=element_text(family="Times"))
+    @
+  \caption{\centering Trip time of day distribution}
+  \label{fig:toddist}
+  \end{subfigure}
+	\caption{Distributions of continuous variables in cleaned Massachusetts Travel Survey dataset}
+	\label{fig:contdists}
+\end{figure}
+
+It is interesting to note that the age distribution does not match exactly the expected age distribution for the region, particularly with the steep drop at approximately age 65. This is because the data are from a travel survey, meaning that travelers over 65 tend to travel substantially less and may not have been captured, which likely relates to the retirement age. The age distribution was also truncated at 16 years old, which is the minimum age to obtain a driver's license. Another interesting pattern is the large late evening peak in time of day travel, indicating that there is a burst of activity after 5PM. One explanation is that the morning peak is dominated by direct single-destination work trips, while midday and evening trips may be a mixture of trip purposes with multiple trip segments and destinations (e.g., shopping, transporting children, or leisure). 
+
+In order to map how the VOT varies depending on age, income, and trip distance, the variables must be binned into discrete categories. This effectively provides a dissection of the VOT at each bin level, revealing its form that can then be reconstructed through further fitting. The continuous variables were binned in such a way to provide sufficient samples per bin for analysis. Age was binned with equal sized breaks, except at the ends for persons under 20 or over 70 years old. Trip distance was binned using an exponential sequence, and for time of day appropriate breaks were set to match the time of day periods in the travel time skim matrices. The binned continuous variables are shown in Table~\ref{tab:contdata} with their respective frequencies and the median value within each bin for age and distance. This median value will be used later to reconstruct the VOT distributions at the appropriately scaled relative position (e.g., exponential). The median was used instead of the mean in order to minimize the effect of outliers within the binned group. For income, which was already binned in the survey (i.e., no true median was available), a simple midpoint value was used in place of a true calculated median.
+
+\begin{table}[!h]
+\centering
+%\renewcommand{\arraystretch}{0.8}% Tighter
+\caption{Discrete bins of continuous data from the Massachusetts Travel Survey}
+\label{tab:contdata}
+<<table_binneddata, results="asis", echo=FALSE>>=
+    tables[['data.binned']]
+  @
+\end{table}
+
+\subsubsection{Travel time skims from the Central Transportation Planning Staff's (CTPS) travel demand model}
+The travel time skims contain estimated travel times for \numprint{\Sexpr{nrow(unique(mnldt[CHOICE==T, .(OTAZ,DTAZ)]))}} traffic analysis zone (TAZ) pairs in the Greater Boston Area. These travel times are calibrated for the modes of commuter rail, subway (``the T''), local bus, and driving; each estimated for weekday time periods in the morning (AM), midday, evening (PM), and night times (NT). An alternative travel time for each trip in the MTS data was then imputed from the travel time skim matrices based on the trip's corresponding origin-destination pair and time of day.
+.
+
+\subsubsection{Monetary travel costs}
+The monetary travel costs were compiled from several sources depending on the mode. Public transportation costs were obtained from the Massachusetts Bay Transportation Authority fare structure at the time of the 2011 MTS survey and travel time skims. Within public transportation modes, local bus and subways have a fixed fare, but commuter rail fares were based on a zoned structure, which was imputed based on the traveler's origin and destination. The driving costs were roughly estimated using the average cost per mile of driving, reported by AAA \citep{AAA2018}, and if applicable to the destination, adding the average hourly cost for city street parking (e.g., \$1.25/hour in Boston) and adding tolls if the shortest route traversed one of the five tolled locations (i.e., Massachusetts Turnpike, Sumner Tunnel, Callahan Tunnel, Ted Williams Tunnel, and Tobin Memorial Bridge). Taxi fares were estimated using a typical fare calculation structure which consists of a fixed starting cost, plus a per mile cost and a per hour cost \citep{NUMBEO2019}. All monetary values either originated in 2011 US dollars or were adjusted to 2011 US dollar values using the consumer price index \citep{BLS2019}.
+
+
+\section{Results}\label{sec:results}
+The results of this paper are described as follows. First, estimation results for an overall multinomial logit model using all variables is presented to demonstrate the modeling capability of the data in a conventional discrete choice model. Second, the VOT is estimated for joint pairwise variables to explore VOT variation across multiple variables simultaneously. The purpose of pairwise estimation is to provide a two-dimensional interaction plot to allow for simultaneously studying the relationship between two variables and VOT, which would otherwise be impossible to visualize in higher dimensions. Third, the estimation of VOT across individual variables is presented. While individual variable estimation ignores potentially important variable interactions, the purpose is to help ensure that a more robust result is achieved that is less prone to data sparsity from excess combinatorial variable interactions (e.g., too few samples for a particular variable combination). The individual estimation is then used to create a continuous parameterization for visualization and interpretation purposes.
+
+\subsection{Full multinomial model results}
+Before investigating VOT variation, a full multinomial discrete choice model is estimated using all of the available variables in a combined model. The purpose of this is to help validate the viability of the travel survey data and to simply demonstrate its modeling capability. The estimation results for the full multinomial model are shown in Table~\ref{tab:fullmod}, with the ``drive'' alternative being omitted as the reference category of the model. Overall the model achieved a McFadden $R^2$ of 0.84, which suggests reasonably good fit results, but several variables and intercepts yielded less than ideal results with unexpected positive coefficients and/or insignificance. This may be attributed to noisy data and model complexity, potentially resulting in over-fitting. A simpler or more refined model, as well as additional data cleaning could improve the model. However, for the purpose of investigating VOT variation, the results are satisfactory.
+
+\begin{table}[!h]
+%	\renewcommand{\arraystretch}{0.7}% Tighter
+	\centering
+	\setlength{\tabcolsep}{2pt}
+	\caption{Multinomial model results}
+	\label{tab:fullmod}
+	<<table_fullmod, results="asis", echo=FALSE>>=
+	tables[['widefullmodtable']]
+	#tables[['fullmodtable1']]
+	#tables[['fullmodtable2']]
+	@
+\end{table}
+
+\pagebreak
+
+\subsection{Pairwise variable joint VOT estimation results}
+The pairwise variables (i.e., two interaction variables using Equation~\eqref{eq:twointeract}) were estimated as discrete variables for all unique variable pair combinations. Regression estimates for the joint pairwise interaction models are not displayed in their entirety because there is a combined total of 349 coefficients, which are too many to display in this paper, full results can be found on the public GitHub repository \url{https://github.com/nick-fournier/Value-of-Time-Exploration}. The resulting joint VOTs are shown in Figure~\ref{fig:jointplots}, with errors summarized in Table~\ref{tab:jterror}. The joint models achieved $R^2$ values between \Sexpr{round(min(sapply(votmodlistjt, function(x) x[['R2']][1])),2)} and \Sexpr{round(max(sapply(votmodlistjt, function(x) x[['R2']][1])),2)}, with the majority of variables being statistically significant. However, the resulting VOTs also possessed an extremely large range of error in each case, calculated using Equation~\eqref{eq:error}.
+
+\begin{table}[!h]
+	\centering
+	\setlength{\tabcolsep}{4pt}
+	%\renewcommand{\arraystretch}{0.7}% Tighter
+	\caption{Summary statistics for joint VOT error}
+	\label{tab:jterror}
+	<<table_jointerror, results="asis", echo=FALSE>>=
+	tables[['jointerrors']]
+	@
+\end{table}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{localdata/jointplot}
+	\caption{Joint variable VOT plots}
+	\label{fig:jointplots}
+\end{figure}
+
+\subsection{Individual variable value of time estimation results}
+The results of the individually estimated study variable models (i.e., one interaction variable) are summarized in Table~\ref{tab:regresults}. In general all models achieved fairly good fit results, yielding McFadden $R^2$ values between \Sexpr{votmoddt[, round(min(R2),2)]} and \Sexpr{votmoddt[, round(max(R2),2)]}.
+
+\begin{table}[H]
+\centering
+\caption{Summary of individual variable model estimation results}
+\label{tab:regresults}
+<<table_regresults, results="asis", echo=FALSE>>=
+  tables[['regresults']]
+  @
+\end{table}
+
+In all models, all input variables achieved >99\% significance and almost all models yielded negative coefficients. The exception being for taxi and drive modes, where a positive coefficient was associated with travel cost and time. This result may be due to different trip purposes (e.g., leisure versus commute travel) or unaccounted taste preferences, such as taxis that are slower than driving (e.g., wait time), but offer a premium service at a higher costs. More refined modeling approaches are necessary to resolve this.
+
+\subsubsection{Individual categorical variable exploration results}
+
+The categorical variable results for mode, purpose, and time of day, and gender are summarized in Figure~\ref{fig:votcats}, yielding somewhat surprising results. Commuter rail, work/school trips, and night time trips yielded the highest VOT among modes, trip purpose, and time of day, respectively. However, the highest VOT was also associated with the highest range of error in each case while the majority of other points had a relatively small range of error. 
+
+\begin{figure}[!h]
+  \centering
+  \begin{subfigure}[t]{0.3\textwidth}
+    <<plot_votmode, echo = FALSE, warning=FALSE, fig.width=0.3*tscale, fig.height=1.7, dev="cairo_pdf">>=
+    ggplot(votmodlist[['MODE']], aes(x=VAR,y=VOT)) +
+      geom_col(fill='#a1d99b', color='black')+  
+      #geom_point() + #aes(size=N)) +
+      geom_errorbar(aes(ymin=ERR_LO, ymax=ERR_HI), width = 0.2) +
+      scale_y_continuous("value of time ($/hr)", limits = c(0,60), expand = c(0,0)) +
+      scale_x_discrete(" ", limits = votmodlist[['MODE']][order(-VOT),][VOT>0,VAR],
+                      label = votmodlist[['MODE']][order(-VOT),][VOT>0,LABEL]) +
+      theme_classic() +
+      theme(text=element_text(family="Times"),
+            axis.title.y = element_text(size=10),
+            #axis.title.x = element_text(margin=margin(t=7,r=0,b=0,l=0)),
+            plot.margin = unit(c(3,0,5,0),"pt"),
+            axis.text.x = element_text(angle=30, hjust=1))
+            
+    @
+	  \caption{\centering Travel mode}
+	  \label{fig:votmode}
+	\end{subfigure}
+	\begin{subfigure}[t]{0.26\textwidth}
+	  <<plot_votpurpose, echo = FALSE, warning=FALSE, fig.width=0.25*tscale, fig.height=1.7, dev="cairo_pdf">>=
+    ggplot(votmodlist[['TRPPUR']], aes(x=VAR,y=VOT)) +
+      geom_col(fill='#a1d99b', color='black')+
+      #geom_point() + #aes(size=N)) +
+      geom_errorbar(aes(ymin=ERR_LO, ymax=ERR_HI), width=0.2) +
+      scale_y_continuous("value of time ($/hr)", limits = c(0,125), expand = c(0,0)) +
+      scale_x_discrete(NULL, limits = votmodlist[['TRPPUR']][order(-VOT),VAR],
+                      label = votmodlist[['TRPPUR']][order(-VOT),LABEL]) +
+      theme_classic() +
+      theme(text=element_text(family="Times"),
+            axis.title.y = element_text(size=10),
+            #axis.title.x = element_text(margin=margin(t=6,r=0,b=0,l=0)),
+            plot.margin = unit(c(3,0,0,0),"pt"),
+            axis.text.x = element_text(angle=30, hjust=1))
+            
+    @
+    \caption{\centering Trip purpose}
+	  \label{fig:votpurpose}
+  \end{subfigure}
+  \begin{subfigure}[t]{0.26\textwidth}
+    <<plot_vottod, echo = FALSE, warning=FALSE, fig.width=0.26*tscale, fig.height=1.7, dev="cairo_pdf">>=
+    ggplot(votmodlist[['TRPTIME']], aes(x=LABEL,y=VOT)) +
+      geom_col(fill='#a1d99b', color='black')+
+      #geom_point() + #aes(size=N)) +#aes(size=N)) +
+      geom_errorbar(aes(ymin=ERR_LO, ymax=ERR_HI), width=0.2) +
+      scale_x_discrete(" ", limits = varlabelvals$TRPTIME$LABEL, label = c("AM","Midday","PM","Night")) +
+      scale_y_continuous("value of time ($/hr)", limits = c(0,125), expand = c(0,0)) +
+      theme_classic() +
+      theme(text=element_text(family="Times"),
+            axis.title.y = element_text(size=10),
+            #axis.title.x = element_text(margin=margin(t=6,r=0,b=0,l=0)),
+            plot.margin = unit(c(3,0,4,0),"pt"),
+            axis.text.x = element_text(angle=30, hjust=1))            
+    @
+    \caption{\centering Time of day}
+	  \label{fig:vottod}
+  \end{subfigure}
+  \begin{subfigure}[t]{0.15\textwidth}
+	<<plot_votgend, echo = FALSE, warning=FALSE, fig.width=0.15*tscale, fig.height=1.7, dev="cairo_pdf">>=
+		ggplot(votmodlist[['GEND']], aes(x=LABEL,y=VOT)) +
+		geom_col(fill='#a1d99b', color='black')+
+		#geom_point() + #aes(size=N)) +#aes(size=N)) +
+		geom_errorbar(aes(ymin=ERR_LO, ymax=ERR_HI), width=0.2) +
+		scale_y_continuous("value of time ($/hr)", limits = c(0,60), expand = c(0,0)) +
+		scale_x_discrete(NULL) +
+		theme_classic() +
+		theme(text=element_text(family="Times"),
+		axis.title.y = element_text(size=10),
+		#axis.title.x = element_text(margin=margin(t=6,r=0,b=0,l=0)),
+		plot.margin = unit(c(3,0,16,0),"pt"),
+		axis.text.x = element_text(angle=30, hjust=1))		
+	@
+	\caption{\centering Gender}
+	\label{fig:votgend}
+	\end{subfigure}
+	\caption{VOT for categorical variables}
+	\label{fig:votcats}
+\end{figure}
+
+\subsubsection{Individual continuous variable exploration results}
+
+The binned continuous variables are plotted in Figure~\ref{fig:fits}. For demonstration purposes, the data points are fitted with a parametric model, fitted to each continuous variable. The fitting results are summarized in Table~\ref{tab:parafit}. Income and travel distance both yielded a recognizable exponential form, which were easily fitted as log-linear models with an $R^2$ of \Sexpr{round(summary(fit_inc)[['r.squared']],2)} and \Sexpr{round(summary(fit_dist)[['r.squared']],2)}, respectively. Age resulted in an arc shaped pattern that was fitted to a Gaussian function, yielding an $R^2$ of \Sexpr{round(nls.rsquared(fit_age, votmodlist[['AGE_GRPD']][['VOT']],4),3)}. 
+
+\begin{figure}[H]
+  \centering
+  \begin{subfigure}[b]{0.32\textwidth}
+    <<plot_incfit, echo = FALSE, warning=FALSE, fig.width=0.32*tscale, fig.asp=0.9, dev = "cairo_pdf">>=    
+    ggplot(votmodlist[['INCOME']], aes(x=VAL/1000,y=VOT)) +
+      stat_function(fun=function(x) fun.loglin(1000*x, coef(fit_inc)), color = 'gray50') +
+      geom_point()+#aes(size=N)) +
+      annotate("text", x=150, y=10, label = paste("R^2==",round(summary(fit_inc)[['r.squared']],2)), parse=T, size=3, family = 'Times') +
+      geom_errorbar(aes(ymin=ERR_LO, ymax=ERR_HI), width=0.1*200) +
+      scale_x_continuous("Income (ten-thousands)", label = scales::dollar) +
+      scale_y_continuous("value of time ($/hr)", limits = c(0,100)) +
+      theme_classic() + theme(text=element_text(family="Times"))
+      
+    @
+	  \caption{\centering Fitted VOT as a log-linear function of income}
+	  \label{fig:incfit}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.32\textwidth}
+	  <<plot_agefit, echo = FALSE, warning=FALSE, fig.width=0.32*tscale, fig.asp=0.9, dev = "cairo_pdf">>=
+    ggplot(votmodlist[['AGE_GRPD']], aes(x=VAL,y=VOT)) +
+      stat_function(fun=function(x) fun.norm(x, coef(fit_age)), color = 'gray50') +
+      geom_point()+#aes(size=N)) +
+      annotate("text", x=70, y=10,
+              label = paste("R^2==",round(nls.rsquared(fit_age, votmodlist[['AGE_GRPD']][['VOT']],4),3)), parse=T, size=3, family = 'Times') +
+      geom_errorbar(aes(ymin=ERR_LO, ymax=ERR_HI), width=0.1*100) +
+      scale_y_continuous("value of time ($/hr)") +
+      scale_x_continuous("Age (years)") +
+      coord_cartesian(ylim = c(0,100)) +
+      theme_classic() + theme(text=element_text(family="Times"), legend.position = "none")
+      
+    @
+    \caption{\centering Fitted VOT as a Gaussian function of age}
+	  \label{fig:agefit}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.32\textwidth}
+	  <<plot_distfit, echo = FALSE, warning=FALSE, fig.width=0.32*tscale, fig.asp=0.9, dev = "cairo_pdf">>=
+    ggplot(votmodlist[['TRPDIST_GRPD']], aes(x=VAL,y=VOT)) +
+      stat_function(fun=function(x) fun.loglin(x, coef(fit_dist)), color = 'gray50') +
+      geom_point()+#aes(size=N)) +
+      annotate("text", x=12, y=40, label = paste("R^2==",round(summary(fit_dist)[['r.squared']],2)), parse=T, size=3, family = 'Times') +
+      geom_errorbar(aes(ymin=ERR_LO, ymax=ERR_HI), width=0.1*15) +
+      scale_x_continuous("Travel distance (miles)") +
+      scale_y_continuous("value of time ($/hr)") +
+            coord_cartesian(ylim = c(0,300)) +
+      theme_classic() + theme(text=element_text(family="Times"), legend.position = "none")
+      
+    @
+    \caption{\centering Fitted VOT as a log-linear function of travel distance}
+	  \label{fig:distfit}
+  \end{subfigure}
+	\caption{Fitted VOT distribution for continuous variables}
+	\label{fig:fits}
+\end{figure}
+
+The parameters in Table~\ref{tab:parafit} present the intercept $\alpha$ and the exponential rate coefficient $\beta$ for the log-linear models for income and travel distance. The Gaussian model for age has parameters for the mean $\mu$, standard deviation $\sigma$, and a scaling parameter $b$. In order to produce a coefficient at a reasonable scale (i.e., not extremely small), income was also adjusted on a fixed unit scale of \$10,000 for $x$, while age and travel distance were left in units of miles and years.
+
+\begin{table}[!h]
+\centering
+\caption{Summary of parametric fitting results}
+\label{tab:parafit}
+<<table_parafit, results="asis", echo=FALSE>>=
+  tables[['parafit']]
+  @
+\end{table}
+
+\section{Discussion}\label{sec:discussion}
+This study utilized a household travel survey to construct a revealed preference dataset with imputed alternatives to estimate multinomial discrete choice models for mode choice in order to measure the VOT across several study variables. The objective is to investigate whether any patterns or relationships exist between the VOT and common demographic and travel variables (e.g., age, income, gender, purpose, time of day, and trip distance). The purpose is to reveal these underlying patterns in the VOT, helping to provide a better understanding of their shape for use in future research and practice. A better understanding of the VOT is important to the development of more informed and refined transportation models, but also helps focus research by exposing questions that require further investigation on why such relationships exist. The following subsections discuss the findings for VOT by each of the study variable types. 
+
+\subsection{Age, income, and travel distance}
+The VOT by age was found to follow a Gaussian function (a normal curve), with the crest (the mean) at approximately \Sexpr{round(votgrid[which.max(AGE.VOT),AGE],0)} years old, suggesting that for some reason older travelers tend to have a lower VOT and middle age the highest. There are many possible explanations for this result. Perhaps it has to do with the stage of life people are in (e.g., fewer time constraints when older and younger, or higher income and responsibilities at middle age). Though less plausible, it could also simply be a generational phenomenon. Further research is necessary to explain this, either through explanatory variables or through longitudinal studies over time. Regardless, if age does possess a Gaussian or general ``U-shaped'' VOT function, this will have very critical modeling implications. Any model estimating age linearly, or log-linearly, will fail to accurately capture this curve and merely find some average point with severe error.
+
+Although the Gaussian function was overall a very good fit for VOT by age with an $R^2$ of  \Sexpr{round(summary(fit_inc)[['r.squared']],2)}, there was one major outlier for the age group of 20-29, shown in Table~\ref{tab:regresults} and Figure~\ref{fig:agefit}. The issue can be slightly isolated to being cost related because unlike the travel time coefficient, the coefficient for travel cost appears to be very low and relatively out of step with the other cost coefficients. This causes an imbalance in the VOT calculation of $VOT = \frac{\beta_{time}}{\beta_{cost}}$, causing VOT to dramatically increase if estimation error is not systematic across both time and cost. One possible explanation is that 20-29 year olds often have subsidized travel, such as student transit passes or a car owned by their parents, thus having an overvalued travel cost in the data. This problem is potentially magnified by the huge number of colleges and universities in Massachusetts. These externalities are difficult to explain using the given data set, but future surveys could account for such transfers of costs in more detail. 
+
+The results also show that the VOT varies log-linearly with both income and travel distance. However, the log-linear coefficient (exponential rate of increase) for income of only \Sexpr{formatC(coef(fit_inc)[2], digits=2, format='g')} implies a much more gradual upward curve compared to travel distance, which has a coefficient of \Sexpr{formatC(coef(fit_dist)[2], digits=2, format='f')}. This means that travel distance (and total travel time) tends to dominate the overall VOT as trip length increases. The importance of this is that not accounting for travel distance in a transportation model has very serious modeling implications. For example, a ten mile trip has a VOT approximately \Sexpr{round(exp(coef(fit_dist)[2]*10)/exp(coef(fit_dist)[2]),1)} times higher than a one mile trip.
+
+Travel distance is also a spatial variable, which can vary by location of work, home, and choice of leisure or other personal activities. Furthermore, there is likely to be areas of correlation or ``self selection'' bias among variables. For example, particularly high/low income people or industries may be concentrated in specific areas. Higher income travelers may choose to live closer to employment at a premium, or in contrast could choose to live in wealthy remote suburb with direct commuter rail access. In either case, this could confound any model estimation. Further spatial analysis is necessary to determine the effect that this has on VOT estimation in regards to travel distance.
+
+Travel distance is also a spatial variable, which can vary by location of work, home, and choice of leisure or other personal activities. Furthermore, there is likely to be areas of correlation or ``self selection'' bias among variables. For example, particularly high/low income people or industries may be concentrated in specific areas. Higher income travelers may choose to live closer to employment at a premium, or in contrast could choose to live in wealthy remote suburb with direct commuter rail access. In either case, this could confound any model estimation. Further spatial analysis is necessary to determine the effect that this has on VOT estimation in regards to travel distance.
+
+\subsection{Mode, trip purpose, time of day, and gender}
+The categorical variables showed that commuter rail, work/school trips, and night time travel have the highest VOTs. The result for mode is somewhat interesting considering that the VOT for commuter rail, a public transportation mode, was much higher than the other public transportation modes of subway and bus. It perhaps has more to do with intersectionality of users, for example that commuter rail riders are primarily higher-income travelers using it for work trips, both of which have a very high VOT. However, the highest VOT in mode, trip purpose, and time of day, also showed the greatest range of error, suggesting the result may be inaccurate due to unexplained variation (e.g., type of people making work/school trips) or small sample sizes (e.g., night time travel).
+
+Moreover, despite the detailed and systematic assignment of imputed travels costs for the mode alternatives, there are likely to be many unaccounted cost factors, such as availability of street parking, availability of automobiles, trip encumbrances (e.g., transporting goods, groceries, children, disabilities, etc.), discounted toll/fare passes, etc. There is likely an unimaginable variety of factors affecting travel cost and behavior. 
+
+
+Another serious issue are the positive coefficients associated with driving and taxi modes. The exact reasoning for this is difficult to determine and may be affected by the small sample size of only \numprint{\Sexpr{length(mnldt[MODE=='TAXI' & CHOICE==T,TRIPID])}} taxi trips. One possible explanation is that taxis are unique in that they can have longer travel times than driving, but cost much more due to the added convenience they offer to travelers. This convenience is not captured in the simple models used in this paper, resulting in a negative value when compared to automobiles. However, this does not entirely explain the positive coefficient for driving. More sophisticated models are necessary to account for this, such as accounting for when no automobile is available at the trip level, not just at the personal or household level. Moreover, transit modes other than the commuter rail in Boston are not distance based, meaning that the monetary cost function is generally flat or stepped over time and distance, introducing further modeling challenges.
+
+Overall, gender had little difference in the VOT. However, when interacting with variables several interesting insights emerge. It would appear that younger women, women taking longer distance trips over 12 miles, and women taking night time trips have a much higher VOT compared to men. The reason for these differences is difficult to speculate, but some possible hypotheses could be additional family responsibilities when commuting or fear/risk of assault during night trips. For example, young men may feel comfortable walking to taking public transit at night while young women may not and are forced to choose a more expensive travel mode or time of day.
+
+\section{Conclusions}\label{sec:conclusion}
+
+This study estimated the VOT across discrete dissections of important modeling variables to explore its variation. The variables are both categorical, such as mode, trip purpose, time of day, and gender; but also continuous variables of income, age, and travel distance. The purpose is to provide a broader understanding of how the VOT varies and determine possible functional form that could be obscured by direct model estimation, particularly across the continuous variables. Although this study utilized fairly crude methods to dissect and visualize the VOT, the results provide valuable insights. In particular, the VOT has a Gaussian form across age, and a steeply increasing exponential shape across travel distance and income. Furthermore, there are also valuable findings in the VOT varying across gender and time of day that yield important considerations for future transportation models when making assumptions about when and how people travel.
+
+While this research utilized the MTS, a local household travel survey, this methodology and analysis could be applied to other household surveys, such as the National Household Travel Survey (NHTS) \citep{NHTS2017}. Unfortunately, while the NHTS is a much larger survey spanning the entire United States, it only contains annual fuel costs for driving and does not contain any other trip costs for transit modes. In order to determine the VOT, travel cost for the alternative modes must be included for coefficient estimation. Fortunately with the MTS data, these costs were able to be meticulously imputed using local transit fare structures for each transit mode and trip. Performing this task for the entire NHTS data set would be an enormous task given the many different transit systems in the United States. However, with sufficient resources to perform this task, or if future NHTS collects transit costs, expanding this work using NHTS data would help provide important VOT results for broader policy implications beyond just Massachusetts.
+
+These findings are important to both transport models that utilize a VOT, but also in helping guide future research on understanding and modeling the VOT. There is further work to be done to address the limitations and unresolved questions in this study, such as a more precise accounting for travel costs (e.g., parking and tolls), further investigation into the Gaussian form of VOT over age, and a spatial analysis for the VOT and associated factors. Moreover, there is a lack of understanding on how VOT varies across sensitive demographic and socio-economic variables, such as race and ethnicity and other sensitive factors often overlooked in travel models. To investigate these issues further, a mixed logit would be a logical next step. However, a mixed logit model requires a parametric function to be known a priori for the continuous ``mixing'' variable. Findings from this current study could serve as a useful step towards a more sophisticated mixed-logit model estimation and analysis. 
+
+%TC:ignore
+\section{Author contributions}
+The authors confirm contribution to the paper as follows: study conception, data collection, analysis, and manuscript drafting by Nicholas Fournier. Eleni Christofa provided critical feedback, research supervision, and manuscript editing.
+
+\section{Acknowledgments}
+This research was funded in part by the US DOE's Advanced Research Projects Agency-Energy (ARPA-E) under the Traveler Response Architecture using Novel Signaling for Network Efficiency in Transportation (TRANSNET) program, with Award Number DE-AR0000611.
+
+%\newpage
+
+\bibliographystyle{trb}
+\bibliography{trb_vot}
+
+\pagebreak
+
+%\section{Appendix}
+%\begin{center}
+%	\renewcommand{\arraystretch}{0.8}% Tighter
+%	\centering
+% <<table_appendix, results="asis", echo=FALSE>>=
+%   tables[['jtregresults']]
+%   @
+%\end{center}
+%TC:endignore 
+\end{document}
