@@ -933,9 +933,9 @@ ggsave("../writing/figure/jointplot.pdf", jointplot, width = 7.5, height=10)
 save(mnldt, votavg, votmoddt, votmodjt, votmodlist, votmodlistjt, votmodjtintercept,
      varlabelvals, fit_dist, fit_age, fit_inc,
      fun.exp, fun.linear, fun.loglin, fun.norm, nls.rsquared, Nsegs, jointplot,
-     file = "../writing/localdata/dat_models.RData")
-save(votgrid, file = "../writing/localdata/dat_votgrid.RData")
-save(tables, file = "../writing/localdata/dat_tables.RData")
+     file = "../writing/localdata/dat_models.RData", version = 2)
+save(votgrid, file = "../writing/localdata/dat_votgrid.RData", version = 2)
+save(tables, file = "../writing/localdata/dat_tables.RData", version = 2)
 
 #Tables as CSV
 writeLines(paste("\\documentclass{article}\\usepackage[utf8]{inputenc}
