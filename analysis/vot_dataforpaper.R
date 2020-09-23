@@ -313,7 +313,15 @@ tables <- list()
   
   tables$data.summary <- kable(data.summary, "latex", booktabs = T, escape = F, linesep = "") %>%
     add_header_above(c("Mode" = 2, "Income" = 2, "Purpose" = 2, "Gender" = 2)) %>%
-    kable_styling(position = "left", font_size=9) #%>%
+    kable_styling(position = "left", font_size=9, full_width = F) %>%
+    column_spec(1, width = "0.4in") %>%
+    column_spec(2, width = "0.3in") %>%
+    column_spec(3, width = "0.9in") %>%
+    column_spec(4, width = "0.3in") %>%
+    column_spec(5, width = "1.0in") %>%
+    column_spec(6, width = "0.3in") %>%
+    column_spec(7, width = "0.3in") %>%
+    column_spec(8, width = "0.3in")
     #footnote(symbol = "Numbers reflect only reported trips in MTS, not the imputed alternatives")
 
 #### TABLE OF BINNED DATA ####
@@ -343,7 +351,15 @@ tables <- list()
   tables$data.binned <- kable(data.binned, "latex", booktabs = T, escape = F, linesep = "") %>%
     #add_header_above(c("Age" = 3, "Distance" = 3, "Travel time" = 3, "Time-of-day" = 2)) %>%
     add_header_above(c("Age (years)" = 3, "Distance (miles)" = 3, "Time-of-day" = 2)) %>%
-    kable_styling(position = "left", font_size=9) #%>%
+    kable_styling(position = "left", font_size=9, full_width = F) %>%
+    column_spec(1, width = "0.3in") %>%
+    column_spec(2, width = "0.4in") %>%
+    column_spec(3, width = "0.4in") %>%
+    column_spec(4, width = "0.4in") %>%
+    column_spec(5, width = "0.3in") %>%
+    column_spec(6, width = "0.4in") %>%
+    column_spec(7, width = "1.2in") %>%
+    column_spec(8, width = "0.4in")
     #footnote(symbol = "Numbers reflect only reported trips in MTS, not the imputed alternatives")
 
 
