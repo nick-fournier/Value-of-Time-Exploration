@@ -13,6 +13,7 @@
 \usepackage{nccmath}
 \usepackage{numprint}
 \usepackage{longtable}
+\usepackage{tabu}
 \npthousandsep{,}
 %\RequirePackage[group-separator={,}]{siunitx}
 %\usepackage{tracefnt}
@@ -217,18 +218,31 @@ The Massachusetts Travel Survey (MTS) \citep{MTS2012} contains the reported trav
 
 From the remaining available data, a dataset with imputed alternatives was able to be constructed for \numprint{\Sexpr{length(unique(mnldt[CHOICE==T, TRIPID]))}} reported trips from \numprint{\Sexpr{nrow(unique(mnldt[CHOICE==T, .(SAMPN,PERNO)]))}} persons and \numprint{\Sexpr{length(unique(mnldt[CHOICE==T,SAMPN]))}} household samples. The number of reported trips represents the total number of actual samples in the data, with an alternative mode choice being imputed (i.e., the hypothetical alternative not taken by the respondent) for each trip. 
 
-\subsubsection{Categorical data variables}
-The resulting dataset contained both continuous and categorical variables. The categorical variables consist of mode, trip purpose, and income. Although income is naturally continuous, it was already binned into discrete income groups in the survey data. These data are summarized in Table~\ref{tab:catdata} showing the categorical variables and frequencies $N$ within each group. The ``Other'' trip purpose, which represents the largest share of trips, includes trips when a respondent either refused to specify their trip purpose or when the trip was transport related (e.g., picking up or dropping off a passenger). 
 
-\begin{table}[!h]
-\centering
-%\renewcommand{\arraystretch}{0.8}% Tighter
-\caption{Categorical data from the Massachusetts Travel Survey}
-\label{tab:catdata}
-<<table_datasummary, results="asis", echo=FALSE>>=
-    tables[['data.summary']]
-  @
+\begin{table}[H]
+	\centering
+	\caption{Data from the Massachusetts Travel Survey}
+	\label{tab:data}
+	<<table_datasummary, results="asis", echo=FALSE>>=
+	tables[['data.summary']]		
+	tables[['data.binned']]
+	@
+
 \end{table}
+
+\subsubsection{Categorical data variables}
+The resulting dataset contained both continuous and categorical variables, shown in Table~\ref{tab:data}, summarizing the frequencies $N$ in each group. The categorical variables consist of mode, trip purpose, and income. Although income is naturally continuous, it was already binned into discrete income groups in the survey data. The ``Other'' trip purpose, which represents the largest share of trips, includes trips when a respondent either refused to specify their trip purpose or when the trip was transport related (e.g., picking up or dropping off a passenger). 
+
+%\begin{table}[!h]
+%\centering
+%%\renewcommand{\arraystretch}{0.8}% Tighter
+%\caption{Categorical data from the Massachusetts Travel Survey}
+%\label{tab:catdata}
+%<<table_datasummary, results="asis", echo=FALSE>>=
+%    tables[['data.summary']]
+%  @
+%\end{table}
+
 The mode variable is used as the discrete choice set, i.e., the mode chosen among possible alternatives in the data. While other research will often group public transit options (e.g., bus, express bus, subway, commuter rail, etc.) into a single transit category for practical modeling purposes (e.g., insufficient access to public transit, data balancing, etc.), an attempt was made to retain as many distinct modes as possible. The reasoning is that there are likely important differences in user preference amongst transit modes. For example, commuter rail tends to serve wealthier suburban commuters with higher VOTs, and often allow for remote laptop work which further alters VOT. It is possible further variations exist between public transit modes and is worthy of investigation. 
 
 \subsubsection{Continuous data variables}
@@ -314,17 +328,17 @@ The MTS data also contains several continuous variables used for the analysis. T
 
 It is interesting to note that the age distribution does not match exactly the expected age distribution for the region, particularly with the steep drop at approximately age 65. This is because the data are from a travel survey, meaning that travelers over 65 tend to travel substantially less and may not have been captured, which likely relates to the retirement age. The age distribution was also truncated at 16 years old, which is the minimum age to obtain a driver's license. Another interesting pattern is the large late evening peak in time of day travel, indicating that there is a burst of activity after 5PM. One explanation is that the morning peak is dominated by direct single-destination work trips, while midday and evening trips may be a mixture of trip purposes with multiple trip segments and destinations (e.g., shopping, transporting children, or leisure). 
 
-In order to map how the VOT varies depending on age, income, and trip distance, the variables must be binned into discrete categories. This effectively provides a dissection of the VOT at each bin level, revealing its form that can then be reconstructed through further fitting. The continuous variables were binned in such a way to provide sufficient samples per bin for analysis. Age was binned with equal sized breaks, except at the ends for persons under 20 or over 70 years old. Trip distance was binned using an exponential sequence, and for time of day appropriate breaks were set to match the time of day periods in the travel time skim matrices. The binned continuous variables are shown in Table~\ref{tab:contdata} with their respective frequencies and the median value within each bin for age and distance. This median value will be used later to reconstruct the VOT distributions at the appropriately scaled relative position (e.g., exponential). The median was used instead of the mean in order to minimize the effect of outliers within the binned group. For income, which was already binned in the survey (i.e., no true median was available), a simple midpoint value was used in place of a true calculated median.
+In order to map how the VOT varies depending on age, income, and trip distance, the variables must be binned into discrete categories. This effectively provides a dissection of the VOT at each bin level, revealing its form that can then be reconstructed through further fitting. The continuous variables were binned in such a way to provide sufficient samples per bin for analysis. Age was binned with equal sized breaks, except at the ends for persons under 20 or over 70 years old. Trip distance was binned using an exponential sequence, and for time of day appropriate breaks were set to match the time of day periods in the travel time skim matrices. The binned continuous variables shown in Table~\ref{tab:data} with their respective frequencies and the median value within each bin for age and distance. This median value will be used later to reconstruct the VOT distributions at the appropriately scaled relative position (e.g., exponential). The median was used instead of the mean in order to minimize the effect of outliers within the binned group. For income, which was already binned in the survey (i.e., no true median was available), a simple midpoint value was used in place of a true calculated median.
 
-\begin{table}[!h]
-\centering
-%\renewcommand{\arraystretch}{0.8}% Tighter
-\caption{Discrete bins of continuous data from the Massachusetts Travel Survey}
-\label{tab:contdata}
-<<table_binneddata, results="asis", echo=FALSE>>=
-    tables[['data.binned']]
-  @
-\end{table}
+%\begin{table}[!h]
+%\centering
+%%\renewcommand{\arraystretch}{0.8}% Tighter
+%\caption{Discrete bins of continuous data from the Massachusetts Travel Survey}
+%\label{tab:contdata}
+%<<table_binneddata, results="asis", echo=FALSE>>=
+%    tables[['data.binned']]
+%  @
+%\end{table}
 
 \subsubsection{Travel time skims from the Central Transportation Planning Staff's (CTPS) travel demand model}
 The travel time skims contain estimated travel times for \numprint{\Sexpr{nrow(unique(mnldt[CHOICE==T, .(OTAZ,DTAZ)]))}} traffic analysis zone (TAZ) pairs in the Greater Boston Area. These travel times are calibrated for the modes of commuter rail, subway (``the T''), local bus, and driving; each estimated for weekday time periods in the morning (AM), midday, evening (PM), and night times (NT). An alternative travel time for each trip in the MTS data was then imputed from the travel time skim matrices based on the trip's corresponding origin-destination pair and time of day.
@@ -551,7 +565,7 @@ This study utilized a household travel survey to construct a revealed preference
 \subsection{Age, income, and travel distance}
 The VOT by age was found to follow a Gaussian function (a normal curve), with the crest (the mean) at approximately \Sexpr{round(votgrid[which.max(AGE.VOT),AGE],0)} years old, suggesting that for some reason older travelers tend to have a lower VOT and middle age the highest. There are many possible explanations for this result. Perhaps it has to do with the stage of life people are in (e.g., fewer time constraints when older and younger, or higher income and responsibilities at middle age). Though less plausible, it could also simply be a generational phenomenon. Further research is necessary to explain this, either through explanatory variables or through longitudinal studies over time. Regardless, if age does possess a Gaussian or general ``U-shaped'' VOT function, this will have very critical modeling implications. Any model estimating age linearly, or log-linearly, will fail to accurately capture this curve and merely find some average point with severe error.
 
-Although the Gaussian function was overall a very good fit for VOT by age with an $R^2$ of  \Sexpr{round(summary(fit_inc)[['r.squared']],2)}, there was one major outlier for the age group of 20-29, shown in Table~\ref{tab:regresults} and Figure~\ref{fig:agefit}. The issue can be slightly isolated to being cost related because unlike the travel time coefficient, the coefficient for travel cost appears to be very low and relatively out of step with the other cost coefficients. This causes an imbalance in the VOT calculation of $VOT = \frac{\beta_{time}}{\beta_{cost}}$, causing VOT to dramatically increase if estimation error is not systematic across both time and cost. One possible explanation is that 20-29 year olds often have subsidized travel, such as student transit passes or a car owned by their parents, thus having an overvalued travel cost in the data. This problem is potentially magnified by the huge number of colleges and universities in Massachusetts. These externalities are difficult to explain using the given data set, but future surveys could account for such transfers of costs in more detail. 
+Although the Gaussian function was overall a good fit for VOT by age with an $R^2$ of  \Sexpr{round(nls.rsquared(fit_age, votmodlist[['AGE_GRPD']]$VOT,4),3)}, there was one outlier for ages 20-29, shown in Table~\ref{tab:regresults} and Figure~\ref{fig:agefit}. The issue can be isolated to travel cost because unlike the travel time coefficient, the cost coefficient appears to be very low and relatively out of step with the other cost coefficients. This causes an imbalance in the VOT calculation of $VOT = \frac{\beta_{time}}{\beta_{cost}}$, causing VOT to dramatically increase if estimation error is not systematic across both time and cost. One possible explanation is that 20-29 year olds often have subsidized travel, such as student transit passes or a car owned by their parents, thus having an overvalued travel cost in the data. This problem is potentially magnified by the huge number of colleges and universities in Massachusetts. These externalities are difficult to explain with the given data set, but future surveys and modeling approaches could better account for such transfers of costs in more detail. 
 
 The results also show that the VOT varies log-linearly with both income and travel distance. However, the log-linear coefficient (exponential rate of increase) for income of only \Sexpr{formatC(coef(fit_inc)[2], digits=2, format='g')} implies a much more gradual upward curve compared to travel distance, which has a coefficient of \Sexpr{formatC(coef(fit_dist)[2], digits=2, format='f')}. This means that travel distance (and total travel time) tends to dominate the overall VOT as trip length increases. The importance of this is that not accounting for travel distance in a transportation model has very serious modeling implications. For example, a ten mile trip has a VOT approximately \Sexpr{round(exp(coef(fit_dist)[2]*10)/exp(coef(fit_dist)[2]),1)} times higher than a one mile trip.
 
@@ -573,9 +587,10 @@ Overall, gender had little difference in the VOT. However, when interacting with
 
 This study estimated the VOT across discrete dissections of important modeling variables to explore its variation. The variables are both categorical, such as mode, trip purpose, time of day, and gender; but also continuous variables of income, age, and travel distance. The purpose is to provide a broader understanding of how the VOT varies and determine possible functional form that could be obscured by direct model estimation, particularly across the continuous variables. Although this study utilized fairly crude methods to dissect and visualize the VOT, the results provide valuable insights. In particular, the VOT has a Gaussian form across age, and a steeply increasing exponential shape across travel distance and income. Furthermore, there are also valuable findings in the VOT varying across gender and time of day that yield important considerations for future transportation models when making assumptions about when and how people travel.
 
-While this research utilized the MTS, a local household travel survey, this methodology and analysis could be applied to other household surveys, such as the National Household Travel Survey (NHTS) \citep{NHTS2017}. Unfortunately, while the NHTS is a much larger survey spanning the entire United States, it only contains annual fuel costs for driving and does not contain any other trip costs for transit modes. In order to determine the VOT, travel cost for the alternative modes must be included for coefficient estimation. Fortunately with the MTS data, these costs were able to be meticulously imputed using local transit fare structures for each transit mode and trip. Performing this task for the entire NHTS data set would be an enormous task given the many different transit systems in the United States. However, with sufficient resources to perform this task, or if future NHTS collects transit costs, expanding this work using NHTS data would help provide important VOT results for broader policy implications beyond just Massachusetts.
+These findings are important to both transport models that utilize a VOT, but also in helping guide future research on understanding and modeling the VOT. There is further work to be done to address the limitations and unresolved questions in this study, such as a more precise accounting for travel costs (e.g., parking and tolls), further investigation into the Gaussian form of VOT over age, and a spatial analysis for the VOT and associated factors. Moreover, there is a lack of understanding on how VOT varies across sensitive demographic and socio-economic variables, such as race and ethnicity and other sensitive factors often overlooked in travel models. To investigate these issues further, a mixed logit would be a logical next step. However, a mixed logit model requires a parametric function to be known a priori for the continuous ``mixing'' variable. Findings from this current study could serve as a useful step towards a more sophisticated mixed-logit model estimation and analysis.
 
-These findings are important to both transport models that utilize a VOT, but also in helping guide future research on understanding and modeling the VOT. There is further work to be done to address the limitations and unresolved questions in this study, such as a more precise accounting for travel costs (e.g., parking and tolls), further investigation into the Gaussian form of VOT over age, and a spatial analysis for the VOT and associated factors. Moreover, there is a lack of understanding on how VOT varies across sensitive demographic and socio-economic variables, such as race and ethnicity and other sensitive factors often overlooked in travel models. To investigate these issues further, a mixed logit would be a logical next step. However, a mixed logit model requires a parametric function to be known a priori for the continuous ``mixing'' variable. Findings from this current study could serve as a useful step towards a more sophisticated mixed-logit model estimation and analysis. 
+This analysis approach could also be applied to other household surveys, such as the National Household Travel Survey (NHTS) \citep{NHTS2017}. Unfortunately, while the NHTS is a much larger survey spanning the entire United States, it does not contain all trip costs, only annual fuel cost for driving. For the MTS data, these costs were able to be meticulously imputed using local transit fare structures for each transit mode and trip. Performing this task for the entire NHTS data set would be an enormous task given the many different transit systems in the United States. However, with sufficient resources to perform this task, or if future NHTS collects transit costs, expanding this work using NHTS data would help provide important VOT results for broader policy implications beyond just Massachusetts.
+
 
 %TC:ignore
 \section{Author contributions}
