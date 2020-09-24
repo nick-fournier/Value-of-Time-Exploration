@@ -1,0 +1,18 @@
+# Auxiliary files #
+###################
+.Rproj.user/
+.Rhistory
+.RData
+RData files.rar
+*.synctex.gz
+litreview.docx
+main.pdf
+*.log
+*.aux
+*.bbl
+*.out
+*.blg
+count.txt
+writing
+data/MTS/
+data/ttskims/
