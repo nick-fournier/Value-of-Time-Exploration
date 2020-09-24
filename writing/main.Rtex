@@ -67,9 +67,9 @@
     knitr::opts_chunk$set(cache=TRUE)
     
     #Load data
-    load("./localdata/dat_models.RData")
-    load("./localdata/dat_votgrid.RData")
-    load("./localdata/dat_tables.RData")
+    load("./printversion/localdata/dat_models.RData")
+    load("./printversion/localdata/dat_votgrid.RData")
+    load("./printversion/localdata/dat_tables.RData")
     
     #page width
     tscale = 6.5
@@ -347,7 +347,6 @@ In order to map how the VOT varies depending on age, income, and trip distance, 
 
 \subsubsection{Travel time skims from the Central Transportation Planning Staff's (CTPS) travel demand model}
 The travel time skims contain estimated travel times for \numprint{\Sexpr{nrow(unique(mnldt[CHOICE==T, .(OTAZ,DTAZ)]))}} traffic analysis zone (TAZ) pairs in the Greater Boston Area. These travel times are calibrated for the modes of commuter rail, subway (``the T''), local bus, and driving; each estimated for weekday time periods in the morning (AM), midday, evening (PM), and night times (NT). An alternative travel time for each trip in the MTS data was then imputed from the travel time skim matrices based on the trip's corresponding origin-destination pair and time of day.
-.
 
 \subsubsection{Monetary travel costs}
 The monetary travel costs were compiled from several sources depending on the mode. Public transportation costs were obtained from the Massachusetts Bay Transportation Authority fare structure at the time of the 2011 MTS survey and travel time skims. Within public transportation modes, local bus and subways have a fixed fare, but commuter rail fares were based on a zoned structure, which was imputed based on the traveler's origin and destination. The driving costs were roughly estimated using the average cost per mile of driving, reported by AAA \citep{AAA2018}, and if applicable to the destination, adding the average hourly cost for city street parking (e.g., \$1.25/hour in Boston) and adding tolls if the shortest route traversed one of the five tolled locations (i.e., Massachusetts Turnpike, Sumner Tunnel, Callahan Tunnel, Ted Williams Tunnel, and Tobin Memorial Bridge). Taxi fares were estimated using a typical fare calculation structure which consists of a fixed starting cost, plus a per mile cost and a per hour cost \citep{NUMBEO2019}. All monetary values either originated in 2011 US dollars or were adjusted to 2011 US dollar values using the consumer price index \citep{BLS2019}.
