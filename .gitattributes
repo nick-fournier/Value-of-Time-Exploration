@@ -1,3 +1,0 @@
-analysis/dat_mnldt.RData filter=lfs diff=lfs merge=lfs -text
-analysis/dat_skimdat.RData filter=lfs diff=lfs merge=lfs -text
-analysis/dat_estimate.RData filter=lfs diff=lfs merge=lfs -text
